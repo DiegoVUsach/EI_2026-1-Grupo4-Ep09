@@ -22,10 +22,13 @@ knitr::opts_chunk$set(
   fig.height = 4 # Parámetros para el tamaño de gráficas
 )
 ```
-
+6-7: diego
+ambar: 1-3, 8
+sando: 4-5
 # Contexto
 Un estudio recolectó medidas anatómicas de 247 hombres y 260 mujeres (Heinz et al., 2003).
 El estudio incluyó nueve mediciones del esqueleto (ocho diámetros y una profundidad de hueso a hueso) y doce mediciones de grosor (circunferencias) que incluyen el tejido.
+
 # Preguntas
 
 1. Definir la semilla a utilizar, que corresponde a los últimos cuatro dígitos del RUN (sin considerar el dígito verificador) del integrante de menor edad del equipo.
