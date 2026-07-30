@@ -22,10 +22,13 @@ knitr::opts_chunk$set(
   fig.height = 4 # Parámetros para el tamaño de gráficas
 )
 ```
+
 6-7: diego
 ambar: 1-3, 8
 sando: 4-5
+
 # Contexto
+
 Un estudio recolectó medidas anatómicas de 247 hombres y 260 mujeres (Heinz et al., 2003).
 El estudio incluyó nueve mediciones del esqueleto (ocho diámetros y una profundidad de hueso a hueso) y doce mediciones de grosor (circunferencias) que incluyen el tejido.
 
@@ -40,12 +43,12 @@ El estudio incluyó nueve mediciones del esqueleto (ocho diámetros y una profun
 7. Evaluar la bondad de ajuste (incluyendo el análisis de casos atípicos y casos influyentes) y la generalidad (condiciones para RLM) de los modelos y “arreglarlos” en caso de que presenten algún problema.
 8. Evaluar el poder predictivo del modelo con los datos no utilizados para construirlo.
 
-## Parte 1
+# Parte 1
 
 Se define la semilla con los últimos cuatro dígitos del rut del menor integrante:
 ```{r}
 library(dplyr)
-datos <- read.csv("EP09 Datos.csv", sep = ";")
+datos <- read.csv2("EP09 Datos.csv")
 set.seed(8611)
 ```
 # Parte 2
@@ -96,36 +99,34 @@ print(predictoras_azar)
 
 ```
 
+# Parte 4
 
-## Pregunta de investigación
+El paso 4 pide seleccionar como equipo, una variable que justificadamente sea útil para predecir el peso. Hemos definido utilizar como predictor el grosor a la altura de la cintura en cm (Waist.Girth) dado que tiene el mayor coeficiente de correlación R respecto al peso.
 
+```{r}
+matriz_cor <- cor(datos)
+matriz_cor[, "Weight"]
+```
 
+# Parte 5
 
-## Datos
+Se pide utilizar el predictor seleccionado en el paso anterior (Waist.Girth) para armar un modelo de regresión lineal. Para ello usamos la función lm del paquete stats ingresando las variables y la muestra obtenida de 100 hombres.
 
+```{r}
+modelo <- lm(Weight ~ Waist.Girth, data = muestra)
+print(summary(modelo))
+```
 
+# Parte 6
 
-## Formulación de hipótesis
+# Parte 7
 
+# Parte 8
 
-
-## Estadístico de interés
-
-
-## Remuestreo
-
-
-
-## Conclusión
-
----
-
-
-# Problema 2
-
-
-# Respuesta 2
+# Conclusiones
 
 # Referencias
 
 Jara, J. L., & Köhler, J. (s. f.). Inferencia y modelos estadísticos [Perusall].
+
+Heinz, G., Peterson, L. J., Johnson, R. W., & Kerk, C. J. (2003). Exploring Relationships in Body Dimensions. Journal Of Statistics Education, 11(2). https://doi.org/10.1080/10691898.2003.11910711
