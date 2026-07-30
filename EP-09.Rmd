@@ -40,14 +40,61 @@ El estudio incluyó nueve mediciones del esqueleto (ocho diámetros y una profun
 7. Evaluar la bondad de ajuste (incluyendo el análisis de casos atípicos y casos influyentes) y la generalidad (condiciones para RLM) de los modelos y “arreglarlos” en caso de que presenten algún problema.
 8. Evaluar el poder predictivo del modelo con los datos no utilizados para construirlo.
 
-## Lectura de datos
+## Parte 1
+
+Se define la semilla con los últimos cuatro dígitos del rut del menor integrante:
 ```{r}
 library(dplyr)
 datos <- read.csv("EP09 Datos.csv", sep = ";")
 set.seed(8611)
 ```
-# Pregunta 1
+# Parte 2
 
+Debido a que 8611 es impar, se debe trabajar con una selección aleatoria de 100 hombres (Gender == 1), y se separan 70 para construcción y 30 para evaluación.
+```{r}
+hombres <- datos[datos$Gender == 1, ]
+
+indices_muestra <- sample(
+  seq_len(nrow(hombres)),
+  size = 100,
+  replace = FALSE
+)
+muestra <- hombres[indices_muestra, ]
+
+indices_modelado <- sample(
+  seq_len(nrow(muestra)),
+  size = 70,
+  replace = FALSE
+)
+
+datos_modelado <- muestra[indices_modelado, ]
+datos_evaluacion <- muestra[-indices_modelado, ]
+
+cat("Cantidad de hombres disponibles:", nrow(hombres), "\n")
+cat("Tamaño de la muestra:", nrow(muestra), "\n")
+cat("Casos para modelado:", nrow(datos_modelado), "\n")
+cat("Casos para evaluación:", nrow(datos_evaluacion), "\n\n")
+```
+# Parte 3
+
+Se selecciona de forma aleatoria ocho posibles variables predictoras, no tomando en cuenta el peso, altura o género
+```{r}
+
+posibles_predictoras <- setdiff(
+  names(datos),
+  c("Weight", "Height", "Gender")
+)
+
+predictoras_azar <- sample(
+  posibles_predictoras,
+  size = 8,
+  replace = FALSE
+)
+
+cat("Ocho predictoras seleccionadas al azar:\n")
+print(predictoras_azar)
+
+```
 
 
 ## Pregunta de investigación
