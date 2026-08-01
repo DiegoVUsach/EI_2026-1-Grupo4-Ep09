@@ -23,9 +23,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-6-7: diego
-ambar: 1-3, 8
-sando: 4-5
 
 # Contexto
 
@@ -99,7 +96,7 @@ print(predictoras_azar)
 
 # Parte 4
 
-El paso 4 pide seleccionar como equipo, una variable que justificadamente sea útil para predecir el peso. Hemos definido utilizar como predictor el grosor a la altura de la cintura en cm (Waist.Girth) dado que tiene el mayor coeficiente de correlación R respecto al peso.
+El paso 4 pide seleccionar como equipo, una variable que justificadamente sea útil para predecir el peso. Hemos definido como predictor el grosor a la altura de la cintura en cm (Waist.Girth) dado que tiene el mayor coeficiente de correlación R respecto al peso y por su relación con el tamaño corporal.
 
 ```{r}
 matriz_cor <- cor(datos)
@@ -108,10 +105,10 @@ matriz_cor[, "Weight"]
 
 # Parte 5
 
-Se pide utilizar el predictor seleccionado en el paso anterior (Waist.Girth) para armar un modelo de regresión lineal. Para ello usamos la función lm del paquete stats ingresando las variables y la muestra obtenida de 100 hombres.
+Para construir el modelo de regresión lineal simple se utilizó Waist.Girth como predictor del peso. El modelo se ajustó con los 70 hombres reservados para la construcción de los modelos, dejando los otros 30 casos para evaluar posteriormente su capacidad predictiva.
 
 ```{r}
-modelo <- lm(Weight ~ Waist.Girth, data = muestra)
+modelo <- lm(Weight ~ Waist.Girth, data = datos_modelado)
 print(summary(modelo))
 ```
 
@@ -248,7 +245,46 @@ cat("AIC modelo RLM:", AIC(modelo_rlm), "\n")
 
 # Parte 7
 
-## 7.1 Bondad de ajuste del modelo RLM
+## 7.1 Bondad de ajuste del modelo RLS
+
+La pauta pide evaluar la bondad de ajuste tanto del modelo de RLS como del modelo de RLM, por lo que antes de revisar el modelo múltiple se analiza el modelo simple obtenido en la parte 5.
+
+```{r}
+# Casos atípicos del modelo RLS
+residuos_est_rls <- rstandard(modelo_base)
+
+cat("=== Casos atípicos del RLS (|residuo estandarizado| > 3) ===\n")
+atipicos_rls <- which(abs(residuos_est_rls) > 3)
+if (length(atipicos_rls) > 0) {
+  cat("Se encontraron", length(atipicos_rls), "caso(s) atípico(s):\n")
+  for (idx in atipicos_rls) {
+    cat("  Fila", idx, "- Residuo estandarizado:", round(residuos_est_rls[idx], 3), "\n")
+  }
+} else {
+  cat("No se encontraron casos atípicos.\n")
+}
+
+# Casos influyentes del modelo RLS (distancia de Cook)
+n_rls <- nrow(datos_modelado)
+k_rls <- length(coef(modelo_base)) - 1 # 1 predictor
+umbral_cook_rls <- 4 / (n_rls - k_rls - 1)
+
+cat("\n=== Casos influyentes del RLS (Distancia de Cook) ===\n")
+cat("Umbral:", round(umbral_cook_rls, 4), "\n\n")
+
+dist_cook_rls <- cooks.distance(modelo_base)
+influyentes_rls <- which(dist_cook_rls > umbral_cook_rls)
+if (length(influyentes_rls) > 0) {
+  cat("Se encontraron", length(influyentes_rls), "caso(s) influyente(s):\n")
+  for (idx in influyentes_rls) {
+    cat("  Fila", idx, "- Distancia de Cook:", round(dist_cook_rls[idx], 4), "\n")
+  }
+} else {
+  cat("No se encontraron casos influyentes.\n")
+}
+```
+
+## 7.2 Bondad de ajuste del modelo RLM
 
 Se evalúa la bondad de ajuste del modelo de regresión lineal múltiple obtenido en la parte 6, incluyendo el análisis de casos atípicos e influyentes.
 
@@ -316,6 +352,7 @@ legend("topright",
   legend = paste("Umbral =", round(umbral_cook, 4)),
   col = "red", lty = 2
 )
+
 ```
 
 ### Leverage (Apalancamiento)
@@ -343,7 +380,54 @@ if (length(alto_leverage) > 0) {
 }
 ```
 
-## 7.2 Condiciones para Regresión Lineal Múltiple (RLM)
+## 7.3 Condiciones para Regresión Lineal Simple (RLS)
+
+La pauta también pide evaluar la generalidad (condiciones) del modelo de RLS, no solo del RLM. Como el modelo simple tiene un único predictor, no aplica la condición de multicolinealidad.
+
+```{r}
+library(car)
+
+# Linealidad
+residualPlots(modelo_base, fitted = TRUE)
+
+# Independencia
+cat("=== Test de Durbin-Watson (RLS) ===\n")
+dw_test_rls <- durbinWatsonTest(modelo_base)
+print(dw_test_rls)
+cat(
+  "\nConclusión:", ifelse(dw_test_rls$p > 0.05,
+    "No se rechaza H0, los residuos son independientes",
+    "Se rechaza H0, existe autocorrelación en los residuos"
+  ),
+  "(p =", round(dw_test_rls$p, 4), ")\n\n"
+)
+
+# Normalidad
+cat("=== Test de Shapiro-Wilk (RLS) ===\n")
+shapiro_test_rls <- shapiro.test(residuals(modelo_base))
+print(shapiro_test_rls)
+cat(
+  "\nConclusión:", ifelse(shapiro_test_rls$p.value > 0.05,
+    "No se rechaza H0, los residuos siguen una distribución normal",
+    "Se rechaza H0, los residuos NO siguen una distribución normal"
+  ),
+  "(p =", round(shapiro_test_rls$p.value, 4), ")\n\n"
+)
+
+# Homocedasticidad
+cat("=== Test de homocedasticidad (ncvTest, RLS) ===\n")
+ncv_test_rls <- ncvTest(modelo_base)
+print(ncv_test_rls)
+cat(
+  "\nConclusión:", ifelse(ncv_test_rls$p > 0.05,
+    "No se rechaza H0, hay homocedasticidad",
+    "Se rechaza H0, hay heterocedasticidad"
+  ),
+  "(p =", round(ncv_test_rls$p, 4), ")\n\n"
+)
+```
+
+## 7.4 Condiciones para Regresión Lineal Múltiple (RLM)
 
 Se verifican las condiciones necesarias para que el modelo de RLM sea válido.
 
@@ -352,12 +436,17 @@ Se verifican las condiciones necesarias para que el modelo de RLM sea válido.
 Se verifica la linealidad global del modelo mediante el gráfico de residuos vs valores ajustados, y la linealidad por cada predictor mediante gráficos de residuos parciales (component + residual plots).
 
 ```{r}
-# Linealidad global
-plot(modelo_rlm, which = 1, main = "Residuos vs Valores Ajustados")
-
-# Linealidad por cada predictor (Residuos parciales)
 library(car)
-crPlots(modelo_rlm, main = "Gráficos de Residuos Parciales")
+residualPlots(
+  modelo_rlm,
+  terms = ~ Waist.Girth + Knee.Girth + Chest.Girth + Bitrochanteric.diameter,
+  fitted = TRUE
+)
+
+marginalModelPlots(
+  modelo_rlm,
+  terms = ~ Waist.Girth + Knee.Girth + Chest.Girth + Bitrochanteric.diameter
+)
 ```
 
 ### Condición 2: Independencia de los residuos
@@ -410,28 +499,23 @@ plot(modelo_rlm, which = 2, main = "Q-Q Plot de los residuos")
 
 ### Condición 4: Homocedasticidad (varianza constante)
 
-Se evalúa la homocedasticidad mediante el test de Breusch-Pagan.
+Se evalúa la homocedasticidad con ncvTest.
 
 ```{r}
-library(lmtest)
-cat("=== Test de Breusch-Pagan para homocedasticidad ===\n")
-bp_test <- bptest(modelo_rlm)
-print(bp_test)
-
-if (bp_test$p.value > 0.05) {
+cat("=== Test de homocedasticidad (ncvTest) ===\n")
+ncv_test <- ncvTest(modelo_rlm)
+print(ncv_test)
+if (ncv_test$p > 0.05) {
   cat(
     "\nConclusión: No se rechaza H0, hay homocedasticidad (p =",
-    round(bp_test$p.value, 4), ")\n"
+    round(ncv_test$p, 4), ")\n"
   )
 } else {
   cat(
     "\nConclusión: Se rechaza H0, hay heterocedasticidad (p =",
-    round(bp_test$p.value, 4), ")\n"
+    round(ncv_test$p, 4), ")\n"
   )
 }
-
-# Gráfico Scale-Location
-plot(modelo_rlm, which = 3, main = "Scale-Location")
 ```
 
 ### Condición 5: Ausencia de multicolinealidad
@@ -460,7 +544,7 @@ if (any(vif_valores > 5)) {
 }
 ```
 
-## 7.3 Corrección del modelo
+## 7.5 Corrección del modelo
 
 Si se detectan problemas, se procede a corregir el modelo eliminando casos atípicos e influyentes problemáticos, y se reevalúan las condiciones.
 
@@ -535,14 +619,14 @@ cat(
 )
 
 # Homocedasticidad
-cat("--- Test de Breusch-Pagan ---\n")
-bp_corr <- bptest(modelo_corregido)
-print(bp_corr)
+cat("--- Test de homocedasticidad ---\n")
+ncv_corr <- ncvTest(modelo_corregido)
+print(ncv_corr)
 cat(
-  "Conclusión:", ifelse(bp_corr$p.value > 0.05,
+  "Conclusión:", ifelse(ncv_corr$p > 0.05,
     "Homocedasticidad", "Heterocedasticidad"
   ),
-  "(p =", round(bp_corr$p.value, 4), ")\n\n"
+  "(p =", round(ncv_corr$p, 4), ")\n\n"
 )
 
 # Independencia
@@ -573,7 +657,179 @@ par(mfrow = c(1, 1))
 
 # Parte 8
 
+Para evaluar la calidad predictiva se utilizan los 30 hombres que no participaron en la construcción de los modelos.
+
+Siguiendo el capítulo 14, se calculan tres medidas:
+
+- **RMSE:** representa el tamaño típico de los errores de predicción, medido en kilogramos. Un valor menor es mejor.
+- **MAE:** corresponde al error promedio, sin considerar su signo, también medido en kilogramos. Un valor menor es mejor.
+- **R cuadrado:** muestra qué tan bien las predicciones reproducen las diferencias observadas en el peso. Un valor más cercano a 1 es mejor.
+
+Se comparará el modelo de regresión lineal simple con el modelo de regresión lineal múltiple.
+
+```{r}
+# Se mantiene el modelo RLM original porque la eliminación de los
+# casos influyentes no se encuentra suficientemente justificada.
+
+modelo_final <- modelo_rlm
+
+# Predicciones del modelo lineal simple
+predicciones_rls <- predict(
+  modelo_base,
+  newdata = datos_evaluacion
+)
+
+# Predicciones del modelo lineal múltiple
+predicciones_rlm <- predict(
+  modelo_final,
+  newdata = datos_evaluacion
+)
+```
+
+Se crea una función para calcular las medidas usadas para evaluar las predicciones.
+
+```{r}
+# Función para evaluar las predicciones
+evaluar_predicciones <- function(observado, predicho) {
+
+  errores <- observado - predicho
+
+  data.frame(
+    RMSE = sqrt(
+      mean(errores^2)
+    ),
+
+    Rsquared = cor(
+      observado,
+      predicho
+    )^2,
+
+    MAE = mean(
+      abs(errores)
+    )
+  )
+}
+```
+
+Se calculan las medidas para ambos modelos utilizando exactamente los mismos 30 casos.
+
+```{r}
+# Resultados del RLS
+metricas_rls <- evaluar_predicciones(
+  observado = datos_evaluacion$Weight,
+  predicho = predicciones_rls
+)
+
+# Resultados del RLM
+metricas_rlm <- evaluar_predicciones(
+  observado = datos_evaluacion$Weight,
+  predicho = predicciones_rlm
+)
+
+# Tabla comparativa
+comparacion_predictiva <- rbind(
+  RLS = metricas_rls,
+  RLM = metricas_rlm
+)
+
+comparacion_predictiva <- round(
+  comparacion_predictiva,
+  digits = 3
+)
+
+print(comparacion_predictiva)
+```
+
+También se muestra el peso real, el peso predicho por el RLM y el error cometido en cada uno de los 30 casos.
+
+```{r}
+resultados_evaluacion <- data.frame(
+  Peso_observado = datos_evaluacion$Weight,
+  Peso_predicho = predicciones_rlm,
+  Error = datos_evaluacion$Weight -
+    predicciones_rlm
+)
+
+resultados_evaluacion$Peso_predicho <- round(
+  resultados_evaluacion$Peso_predicho,
+  2
+)
+
+resultados_evaluacion$Error <- round(
+  resultados_evaluacion$Error,
+  2
+)
+
+print(resultados_evaluacion)
+```
+
+El siguiente gráfico permite comparar los pesos reales y predichos. Los puntos cercanos a la línea diagonal representan predicciones más acertadas.
+
+```{r}
+plot(
+  datos_evaluacion$Weight,
+  predicciones_rlm,
+  xlab = "Peso observado (kg)",
+  ylab = "Peso predicho (kg)",
+  main = "Predicciones del RLM en datos no vistos",
+  pch = 19
+)
+
+abline(
+  a = 0,
+  b = 1,
+  lty = 2
+)
+```
+
+En los 30 casos no utilizados para construir los modelos, el RLS obtuvo un RMSE de `r comparacion_predictiva["RLS", "RMSE"]` kg, un MAE de `r comparacion_predictiva["RLS", "MAE"]` kg y un R cuadrado de `r comparacion_predictiva["RLS", "Rsquared"]`.
+
+El RLM obtuvo un RMSE de `r comparacion_predictiva["RLM", "RMSE"]` kg, un MAE de `r comparacion_predictiva["RLM", "MAE"]` kg y un R cuadrado de `r comparacion_predictiva["RLM", "Rsquared"]`.
+
+```{r, results='asis', echo=FALSE}
+if (
+  comparacion_predictiva["RLM", "RMSE"] <
+    comparacion_predictiva["RLS", "RMSE"] &&
+  comparacion_predictiva["RLM", "MAE"] <
+    comparacion_predictiva["RLS", "MAE"] &&
+  comparacion_predictiva["RLM", "Rsquared"] >
+    comparacion_predictiva["RLS", "Rsquared"]
+) {
+
+  cat(
+    "El modelo de regresión lineal múltiple presenta una mejor ",
+    "calidad predictiva que el modelo simple, porque comete errores ",
+    "menores y reproduce mejor las diferencias observadas en el peso. ",
+    "Por lo tanto, agregar los predictores seleccionados mejoró la ",
+    "predicción en los datos no vistos."
+  )
+
+} else {
+
+  cat(
+    "El modelo de regresión lineal múltiple no supera al modelo ",
+    "simple en todas las medidas. Esto indica que agregar más ",
+    "predictores mejoró el ajuste con los datos de modelado, pero ",
+    "no necesariamente mejoró las predicciones en casos nuevos. ",
+    "Por ello, debe preferirse el modelo que presente los menores ",
+    "errores en los 30 casos de evaluación."
+  )
+}
+```
+
 # Conclusiones
+El modelo de RLS con `Waist.Girth` como predictor resultó confiable, aunque con un ajuste bastante más modesto que el del RLM (AIC = 465,92 frente a 382,62). Los residuos son independientes (Durbin-Watson, p=0,82), siguen una distribución normal (Shapiro-Wilk, p=0,607) y la varianza es homogénea (ncvTest, p=0,445). La linealidad quedó en el límite, es decir, la prueba de Tukey dio p=0,060, que no permite rechazar la linealidad al nivel habitual de 0,05, pero está cerca del umbral, por lo que conviene no descartar cierta curvatura leve en la relación entre `Waist.Girth` y `Weight`. Se encontró un caso atípico (fila 34, residuo estandarizado=3,008, justo sobre el umbral) y 4 casos influyentes según la distancia de Cook (filas 5, 34, 40 y 63), un número mayor que los 3 casos influyentes detectados en el RLM. Esto sugiere que el modelo simple es algo más sensible a observaciones puntuales que el modelo múltiple, lo que refuerza la conveniencia de usar el RLM.
+
+A partir de ese modelo de RLS, la incorporación mediante selección hacia adelante (basada en AIC) de las variables `Knee.Girth`, `Chest.Girth` y `Bitrochanteric.diameter` mejoró sustancialmente el ajuste del modelo: el R² ajustado aumentó y el AIC se redujo de 465,92 (RLS) a 382,62 (RLM), demostrando que estos predictores aportan información relevante para explicar el peso más allá del contorno de cintura.
+
+El modelo de RLM obtenido resultó confiable, es decir, no se detectaron casos atípicos, los residuos son independientes (Durbin-Watson, p=0,688), siguen una distribución normal (Shapiro-Wilk, p=0,701), la varianza es homogénea (p = 0.3497) y no existe multicolinealidad relevante entre los predictores (VIF < 2,3 en todos los casos). Se identificaron 3 casos influyentes (distancia de Cook). Al eliminarlos, el AIC mejoró de forma notoria (de 382,62 a 356,76) y el error estándar residual disminuyó (de 3,545 a 3,296), pero el R² ajustado en realidad bajó levemente (de 0,877 a 0,874), por lo que la evidencia de que el modelo corregido sea mejor no es unánime. Ante esta evidencia mixta, y dado que no existía una justificación rigurosa e independiente del ajuste para excluir esos casos, se optó por mantener el modelo con todos los datos originales.
+
+Al evaluar la capacidad predictiva en los 30 casos reservados y no usados para construir los modelos, el RLM superó al RLS en las tres métricas: menor RMSE 
+(4,96 kg frente a 5,57 kg), menor MAE (4,17 kg frente a 4,37 kg) y mayor R² (0,842 frente a 0,732). Esto confirma que la mejora observada en el ajuste no 
+se debió a un sobreajuste a los datos de entrenamiento, sino que se traduce en mejores predicciones sobre datos no vistos.
+
+Se concluye que el modelo de RLM que predice el peso a partir del contorno de cintura, contorno de rodilla, contorno de pecho y diámetro 
+bitrocantéreo es confiable y posee mejor poder predictivo que el modelo de RLS basado únicamente en el contorno de cintura, por lo que se recomienda su uso por sobre el modelo simple.
 
 # Referencias
 
