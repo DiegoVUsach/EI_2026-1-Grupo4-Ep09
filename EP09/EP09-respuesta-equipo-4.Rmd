@@ -96,10 +96,10 @@ print(predictoras_azar)
 
 # Parte 4
 
-El paso 4 pide seleccionar como equipo, una variable que justificadamente sea útil para predecir el peso. Hemos definido como predictor el grosor a la altura de la cintura en cm (Waist.Girth) dado que tiene el mayor coeficiente de correlación R respecto al peso y por su relación con el tamaño corporal.
+El paso 4 pide seleccionar como equipo, una variable que justificadamente sea útil para predecir el peso. Hemos definido como predictor el grosor a la altura de la cintura en cm (Waist.Girth) dado que es uno de los que tiene mayor coeficiente de correlación R respecto al peso y por su relación con el tamaño corporal en hombres.
 
 ```{r}
-matriz_cor <- cor(datos)
+matriz_cor <- cor(muestra)
 matriz_cor[, "Weight"]
 ```
 
@@ -319,7 +319,7 @@ if (length(atipicos) > 0) {
 
 ### Análisis de casos influyentes
 
-Se identifican casos influyentes mediante la distancia de Cook. Un caso se considera influyente si su distancia de Cook supera el umbral $\frac{4}{n - k - 1}$, donde $n$ es el número de observaciones y $k$ el número de predictores.
+Se identifican casos influyentes mediante la distancia de Cook. Un caso se considera influyente si su distancia de Cook supera el umbral $\frac{4}{n - k - 1}$, donde $n$ es el número de observaciones y $k$ el número de predictores, Fox, John. (1991).
 
 ```{r}
 # Distancia de Cook
@@ -357,7 +357,7 @@ legend("topright",
 
 ### Leverage (Apalancamiento)
 
-Se evalúan los valores hat (leverage) para detectar observaciones con alto apalancamiento. El umbral se define como $\frac{2(k+1)}{n}$.
+Se evalúan los valores hat (leverage) para detectar observaciones con alto apalancamiento. El umbral se define como $\frac{2(k+1)}{n}$, Hoaglin, David C., y Welsch, Roy E. (1978).
 
 ```{r}
 hat_values <- hatvalues(modelo_rlm)
@@ -659,7 +659,7 @@ par(mfrow = c(1, 1))
 
 Para evaluar la calidad predictiva se utilizan los 30 hombres que no participaron en la construcción de los modelos.
 
-Siguiendo el capítulo 14, se calculan tres medidas:
+Siguiendo el capítulo 14 Jara, J. L., & Köhler, J. (s. f.), se calculan tres medidas:
 
 - **RMSE:** representa el tamaño típico de los errores de predicción, medido en kilogramos. Un valor menor es mejor.
 - **MAE:** corresponde al error promedio, sin considerar su signo, también medido en kilogramos. Un valor menor es mejor.
@@ -836,3 +836,7 @@ bitrocantéreo es confiable y posee mejor poder predictivo que el modelo de RLS 
 Jara, J. L., & Köhler, J. (s. f.). Inferencia y modelos estadísticos [Perusall].
 
 Heinz, G., Peterson, L. J., Johnson, R. W., & Kerk, C. J. (2003). Exploring Relationships in Body Dimensions. Journal Of Statistics Education, 11(2). https://doi.org/10.1080/10691898.2003.11910711
+
+Fox, John. (1991). Regression Diagnostics: An Introduction. Sage Publications (Serie Quantitative Applications in the Social Sciences).
+
+Hoaglin, David C., y Welsch, Roy E. (1978). "The Hat Matrix in Regression and ANOVA", publicado en la revista The American Statistician (Vol. 32, No. 1, pp. 17-22)
