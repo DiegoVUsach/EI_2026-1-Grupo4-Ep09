@@ -1,0 +1,102 @@
+---
+title: "EP10-Estadistica"
+author: "Equipo 4"
+date: "29-07-2026"
+output:
+  html_document:
+    toc: true # Activa la tabla de contenidos (índice)
+    toc_float: true # Permite que el índice se mueva al hacer scroll
+    toc_depth: 3 # Define la cantidad de niveles de títulos
+    theme: flatly # Tema visual (bootstrap)
+    highlight: pygments # Define el estilo del código (colores)
+    df_print: paged # Hace paginado al mostrar data frames
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, # Muestra código R en el documento
+  # warning   = FALSE, # Oculta advertencias
+  message = FALSE, # Oculta mensajes (como los de carga de paquetes)
+  fig.align = "center", # Centra imágenes
+  fig.width = 7,
+  fig.height = 4 # Parámetros para el tamaño de gráficas
+)
+```
+
+
+# Contexto
+
+Un estudio recolectó medidas anatómicas de 247 hombres y 260 mujeres (Heinz et al., 2003).
+El estudio incluyó nueve mediciones del esqueleto (ocho diámetros y una profundidad de hueso a hueso) y doce mediciones de grosor (circunferencias) que incluyen el tejido.
+
+# Preguntas
+
+## Primera parte (variable dicotómica):
+
+1. El equipo crea la variable IMC (índice de masa corporal) como el peso de una persona (en kilogramos) dividida por el cuadrado de su estatura (en metros).
+
+2. Si bien esta variable se usa para clasificar a las personas en varias clases de estado nutricional (bajo peso, normal, sobrepeso, obesidad, obesidad mórbida), para efectos de este ejercicio, usaremos dos clases: sobrepeso (IMC ≥ 23,2) y no sobrepeso (IMC < 23,2).
+
+3. El equipo crea la variable dicotómica EN (estado nutricional) de acuerdo al valor de IMC de cada persona.
+   
+   
+## Segunda parte (modelo de regresión logística para predecir la variable EN):
+
+1. Asegurando reproducibilidad, seleccionar una muestra de 150 mujeres (si su n° de equipo es un número par) o 150 hombres (si su n° de equipo es impar), asegurando que la mitad tenga estado nutricional “sobrepeso” y la otra mitad “no sobrepeso” en cada caso. Dividir esta muestra en dos conjuntos: los datos de 100 personas (50 con EN “sobrepeso”) para utilizar en la construcción de los modelos y 50 personas (25 con EN “sobrepeso”) para poder evaluarlos.
+
+2. Recordar las ocho posibles variables predictoras seleccionadas de forma aleatoria en el ejercicio anterior.
+
+3. Seleccionar, de las otras variables, una que el equipo considere que podría ser útil para predecir la clase EN, justificando bien esta selección (idealmente con literatura).
+
+4. Usando el entorno R, construir un modelo de regresión logística con el predictor seleccionado en el paso anterior y utilizando de la muestra obtenida.
+
+5. Usando herramientas estándares1 para la exploración de modelos del entorno R, buscar entre dos y cinco predictores de entre las variables seleccionadas al azar, recordadas en el punto 2, para agregar al modelo obtenido en el paso 4.
+
+6. Evaluar la confiabilidad y generalidad de los modelos (i.e. que tengan un buen nivel de ajuste, que cumplen las condiciones para RLogit y no están dominados por casos sobreinfluyentes) y “arreglarlos” en caso de que tengan algún problema.
+
+7. Usando código estándar, evaluar el poder predictivo de los modelos con los datos de las 50 personas que no se incluyeron en su construcción en términos de sensibilidad y especificidad.
+
+## Primera parte
+
+### 1) 
+
+Se pide crear la variable IMC (índice de masa corporal): el peso (kg) dividido por el cuadrado de la estatura (m) y debido a que height está en cm en el archivo original, se divide por 100.
+
+```{r}
+library(dplyr)
+
+# Cargar los datos
+datos <- read.csv2("EP09 Datos.csv")
+
+datos <- datos |>
+  mutate(IMC = Weight / (Height / 100)^2)
+```
+
+### 2)
+Ahora se clasifica en dos clases según el umbral IMC >= 23.2:
+
+- sobrepeso: IMC >= 23,2
+- no sobrepeso: IMC < 23,2
+
+```{r}
+datos <- datos |>
+  mutate(clase_sobrepeso = ifelse(IMC >= 23.2, "sobrepeso", "no sobrepeso"))
+
+# Resultados
+head(datos |> select(Weight, Height, IMC, clase_sobrepeso))
+cat("\nDistribución de la clasificación:\n")
+print(table(datos$clase_sobrepeso))
+```
+```{r}
+
+```
+```{r}
+
+```
+# Conclusiones
+
+# Referencias
+
+Jara, J. L., & Köhler, J. (s. f.). Inferencia y modelos estadísticos [Perusall].
+
+Heinz, G., Peterson, L. J., Johnson, R. W., & Kerk, C. J. (2003). Exploring Relationships in Body Dimensions. Journal Of Statistics Education, 11(2). https://doi.org/10.1080/10691898.2003.11910711
