@@ -87,11 +87,64 @@ head(datos |> select(Weight, Height, IMC, clase_sobrepeso))
 cat("\nDistribución de la clasificación:\n")
 print(table(datos$clase_sobrepeso))
 ```
-```{r}
 
+### 3) 
+
+Se crea la variable dicotómica EN (estado nutricional) de acuerdo al valor de IMC y se transforma a factor para futuros análisis.
+
+
+```{r}
+# Crear la variable dicotómica EN
+datos <- datos |>
+  mutate(EN = ifelse(IMC >= 23.2, "sobrepeso", "no sobrepeso")) |>
+  # Convertir a factor para que R entienda que es una variable categórica
+  mutate(EN = factor(EN, levels = c("no sobrepeso", "sobrepeso")))
+
+# Verificamos los resultados mostrando las primeras filas
+head(datos |> select(Weight, Height, IMC, EN))
+
+# Vemos un resumen de la nueva variable dicotómica
+cat("\nDistribución del Estado Nutricional (EN):\n")
+summary(datos$EN)
 ```
-```{r}
 
+
+## Segunda parte
+### 1) 
+
+```{r}
+# Fijamos una semilla para asegurar la reproducibilidad
+set.seed(42)
+
+# Filtramos la base para quedarnos solo con hombres (Gender == 1)
+hombres <- datos |> filter(Gender == 1)
+
+# Seleccionamos aleatoriamente 75 hombres de cada clase (75 + 75 = 150 en total)
+muestra_sobrepeso <- hombres |>
+  filter(EN == "sobrepeso") |>
+  sample_n(75)
+muestra_no_sobrepeso <- hombres |>
+  filter(EN == "no sobrepeso") |>
+  sample_n(75)
+
+# Construimos los datos de entrenamiento (50 de cada clase)
+train_sobrepeso <- muestra_sobrepeso |> slice(1:50)
+train_no_sobrepeso <- muestra_no_sobrepeso |> slice(1:50)
+datos_entrenamiento <- bind_rows(train_sobrepeso, train_no_sobrepeso)
+
+# Construimos los datos de prueba con los restantes (25 de cada clase)
+test_sobrepeso <- muestra_sobrepeso |> slice(51:75)
+test_no_sobrepeso <- muestra_no_sobrepeso |> slice(51:75)
+datos_prueba <- bind_rows(test_sobrepeso, test_no_sobrepeso)
+
+# Verificamos que se haya hecho correctamente
+cat("Total datos de entrenamiento:", nrow(datos_entrenamiento), "\n")
+cat("Distribución en Entrenamiento:\n")
+print(table(datos_entrenamiento$EN))
+
+cat("\nTotal datos de prueba:", nrow(datos_prueba), "\n")
+cat("Distribución en Prueba:\n")
+print(table(datos_prueba$EN))
 ```
 # Conclusiones
 
