@@ -197,7 +197,7 @@ print(round(correlaciones_con_imc, 3))
 Se construye el modelo de regresión logística para el predictor Waist.Girth:
 
 ```{r}
-modelo_log <- glm(EN ~ Waist.Girth, family = binomial(link = logit), data = datos_entrenamiento)
+modelo_log <- glm(EN ~ Waist.Girth, family = binomial(link = "logit"), data = datos_entrenamiento)
 print(summary(modelo_log), signif.stars = FALSE)
 cat("---\n")
 print(anova(modelo_log, test = "LRT"), signif.stars = FALSE)
@@ -205,6 +205,28 @@ print(anova(modelo_log, test = "LRT"), signif.stars = FALSE)
 
 
 ### 5)
+Para agregar predictores al modelo obtenido en el paso 4, se recomienda usar herramientas estándares de búsqueda de modelos para explorar entre las variables candidatas cuál combinación produce el mejor ajuste, evitando al mismo tiempo caer en problemas de convergencia. 
+
+```{r}
+# Modelo mínimo (el obtenido en el paso 4) y modelo máximo
+# (agregando las 8 variables candidatas recordadas en el paso 2)
+nulo <- modelo_log
+maxi <- glm(EN ~ Waist.Girth + Knee.Girth + Bicep.Girth + Bitrochanteric.diameter +
+              Chest.depth + Chest.diameter + Chest.Girth + Calf.Maximum.Girth +
+              Elbows.diameter,
+            family = binomial(link = "logit"), data = datos_entrenamiento)
+
+# regresión escalonada 
+modelo_step <- step(nulo, scope = list(lower = nulo, upper = maxi),
+                     direction = "both", trace = 1)
+
+cat("\nModelo obtenido con regresión escalonada:\n")
+print(summary(modelo_step))
+
+cat("\nComparación RLogitS (paso 4) vs RLogitM (paso 5):\n")
+print(anova(nulo, modelo_step, test = "LRT"))
+```
+No se utiliza la regresión hacia adelante manual con add1(), porque esta alternativa se utiliza solo cuando la regresión escalonada realizada falla por problemas de convergencia, lo cuál no sucede en este caso.
 
 ### 6)
 
