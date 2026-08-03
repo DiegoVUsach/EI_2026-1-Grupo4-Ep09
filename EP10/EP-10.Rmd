@@ -73,7 +73,7 @@ datos <- datos |>
 ```
 
 ### 2)
-Ahora se clasifica en dos clases según el umbral IMC >= 23.2:
+Ahora se clasifica en dos clases según el umbral IMC = 23.2:
 
 - sobrepeso: IMC >= 23,2
 - no sobrepeso: IMC < 23,2
@@ -116,14 +116,14 @@ summary(datos$EN)
 # Fijamos una semilla para asegurar la reproducibilidad
 set.seed(42)
 
-# Filtramos la base para quedarnos solo con hombres (Gender == 1)
-hombres <- datos |> filter(Gender == 1)
+# Filtramos la base para quedarnos solo con mujeres (Gender == 0)
+mujeres <- datos |> filter(Gender == 0)
 
-# Seleccionamos aleatoriamente 75 hombres de cada clase (75 + 75 = 150 en total)
-muestra_sobrepeso <- hombres |>
+# Seleccionamos aleatoriamente 75 mujeres de cada clase (75 + 75 = 150 en total)
+muestra_sobrepeso <- mujeres |>
   filter(EN == "sobrepeso") |>
   sample_n(75)
-muestra_no_sobrepeso <- hombres |>
+muestra_no_sobrepeso <- mujeres |>
   filter(EN == "no sobrepeso") |>
   sample_n(75)
 
@@ -146,6 +146,70 @@ cat("\nTotal datos de prueba:", nrow(datos_prueba), "\n")
 cat("Distribución en Prueba:\n")
 print(table(datos_prueba$EN))
 ```
+### 2)
+
+Recordamos las 8 variables utilizadas en el desarrollo del EP09:
+
+```{r}
+library(knitr)
+
+# 1. Crear un data.frame con las variables y sus descripciones
+tabla_variables <- data.frame(
+  Variable = c("Knee.Girth", "Bitrochanteric.diameter", "Chest.diameter", "Calf.Maximum.Girth", "Bicep.Girth", "Chest.depth", "Chest.Girth", "Elbows.diameter"),
+  Descripción = c(
+    "Grosor promedio de ambas rodillas, posición levemente flectada, medición arriba de la rótula",
+    "Diámetro bitrocantéreo (a la altura de las caderas)",
+    "Diámetro del pecho (a la altura de los pezones)",
+    "Grosor promedio de la parte más ancha de ambas pantorrillas", "Grosor promedio de ambos bíceps, brazos flectados", "Profundidad del pecho (entre la espina y el esternón a la altura de los pezones)", "Grosor del pecho, sobre tejido mamario en mujeres y a la altura de los pezones en varones", "Suma de los diámetros de los codos"
+  )
+)
+
+# 2. Generar la tabla en formato Markdown con kable
+kable(
+  tabla_variables, 
+  col.names = c("Variable", "Descripción"),
+  caption = "Descripción de las variables utilizadas en el estudio."
+)
+```
+
+### 3)
+
+En la literatura Heinz, G., Peterson, L. J., Johnson, R. W., & Kerk, C. J. (2003), se realiza un análisis de regresión para predecir el peso obteniendo la ecuación:
+
+Weight (kg) = - 120 + 0.0781 Shoulder Girth + 0.198 Chest Girth (1)+ 0.340 Waist Girth + 0.0012 Navel Girth+ 0.240 Hip Girth + 0.314 Thigh Girth + 0.0547 Flexed Bicep Girth+ 0.532 Forearm Girth + 0.301 Knee Girth + 0.404 Calf Maximum Girth- 0.0096 Ankle Minimum Girth - 0.118 Wrist Minimum Girth+ 0.328 Height
+
+Además se indica el ajuste presenta un R^2 de 97.3% y se menciona que existe una linealidad razonable entre el peso y las medidas de circunferencia (Girth) junto a la altura.
+
+Como buscamos predecir la variable EN creada, la cual depende del IMC, y a su vez, del peso y la altura, se calculan los valores de correlación entre el IMC y las demás variables. El mayor valor de correlación lo presenta lo presenta la variable Waist.Girth que será nuevamente utilizada como predictor inicial
+
+```{r}
+# Selecciona únicamente las columnas que son numéricas o enteras
+datos_numericos <- datos_entrenamiento |> 
+  select(where(is.numeric))
+
+matriz_correlacion <- cor(datos_numericos, use = "complete.obs")
+
+correlaciones_con_imc <- matriz_correlacion["IMC", ]
+print(round(correlaciones_con_imc, 3))
+```
+
+### 4)
+Se construye el modelo de regresión logística para el predictor Waist.Girth:
+
+```{r}
+modelo_log <- glm(EN ~ Waist.Girth, family = binomial(link = logit), data = datos_entrenamiento)
+print(summary(modelo_log), signif.stars = FALSE)
+cat("---\n")
+print(anova(modelo_log, test = "LRT"), signif.stars = FALSE)
+```
+
+
+### 5)
+
+### 6)
+
+### 7)
+
 # Conclusiones
 
 # Referencias

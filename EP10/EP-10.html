@@ -2910,38 +2910,187 @@ construcción en términos de sensibilidad y especificidad.</p></li>
 <p>Se pide crear la variable IMC (índice de masa corporal): el peso (kg)
 dividido por el cuadrado de la estatura (m) y debido a que height está
 en cm en el archivo original, se divide por 100.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># Cargar los datos</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">&quot;EP09 Datos.csv&quot;</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMC =</span> Weight <span class="sc">/</span> (Height <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.5.3</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Cargar los datos</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">&quot;EP09 Datos.csv&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMC =</span> Weight <span class="sc">/</span> (Height <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
 </div>
 <div id="section-1" class="section level3">
 <h3>2)</h3>
-<p>Ahora se clasifica en dos clases según el umbral IMC &gt;= 23.2:</p>
+<p>Ahora se clasifica en dos clases según el umbral IMC = 23.2:</p>
 <ul>
 <li>sobrepeso: IMC &gt;= 23,2</li>
 <li>no sobrepeso: IMC &lt; 23,2</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_sobrepeso =</span> <span class="fu">ifelse</span>(IMC <span class="sc">&gt;=</span> <span class="fl">23.2</span>, <span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Resultados</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">head</span>(datos <span class="sc">|&gt;</span> <span class="fu">select</span>(Weight, Height, IMC, clase_sobrepeso))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_sobrepeso =</span> <span class="fu">ifelse</span>(IMC <span class="sc">&gt;=</span> <span class="fl">23.2</span>, <span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># Resultados</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">head</span>(datos <span class="sc">|&gt;</span> <span class="fu">select</span>(Weight, Height, IMC, clase_sobrepeso))</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Weight"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Height"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["IMC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["clase_sobrepeso"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"65.6","2":"174.0","3":"21.66733","4":"no sobrepeso","_rn_":"1"},{"1":"71.8","2":"175.3","3":"23.36472","4":"sobrepeso","_rn_":"2"},{"1":"80.7","2":"193.5","3":"21.55319","4":"no sobrepeso","_rn_":"3"},{"1":"72.6","2":"186.5","3":"20.87272","4":"no sobrepeso","_rn_":"4"},{"1":"78.8","2":"187.2","3":"22.48612","4":"no sobrepeso","_rn_":"5"},{"1":"74.8","2":"181.5","3":"22.70640","4":"no sobrepeso","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Distribución de la clasificación:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Distribución de la clasificación:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Distribución de la clasificación:</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos<span class="sc">$</span>clase_sobrepeso))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos<span class="sc">$</span>clase_sobrepeso))</span></code></pre></div>
 <pre><code>## 
 ## no sobrepeso    sobrepeso 
 ##          256          251</code></pre>
+</div>
+<div id="section-2" class="section level3">
+<h3>3)</h3>
+<p>Se crea la variable dicotómica EN (estado nutricional) de acuerdo al
+valor de IMC y se transforma a factor para futuros análisis.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Crear la variable dicotómica EN</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EN =</span> <span class="fu">ifelse</span>(IMC <span class="sc">&gt;=</span> <span class="fl">23.2</span>, <span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="co"># Convertir a factor para que R entienda que es una variable categórica</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EN =</span> <span class="fu">factor</span>(EN, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no sobrepeso&quot;</span>, <span class="st">&quot;sobrepeso&quot;</span>)))</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># Verificamos los resultados mostrando las primeras filas</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="fu">head</span>(datos <span class="sc">|&gt;</span> <span class="fu">select</span>(Weight, Height, IMC, EN))</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Weight"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Height"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["IMC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["EN"],"name":[4],"type":["fct"],"align":["left"]}],"data":[{"1":"65.6","2":"174.0","3":"21.66733","4":"no sobrepeso","_rn_":"1"},{"1":"71.8","2":"175.3","3":"23.36472","4":"sobrepeso","_rn_":"2"},{"1":"80.7","2":"193.5","3":"21.55319","4":"no sobrepeso","_rn_":"3"},{"1":"72.6","2":"186.5","3":"20.87272","4":"no sobrepeso","_rn_":"4"},{"1":"78.8","2":"187.2","3":"22.48612","4":"no sobrepeso","_rn_":"5"},{"1":"74.8","2":"181.5","3":"22.70640","4":"no sobrepeso","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Vemos un resumen de la nueva variable dicotómica</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Distribución del Estado Nutricional (EN):</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## Distribución del Estado Nutricional (EN):</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">summary</span>(datos<span class="sc">$</span>EN)</span></code></pre></div>
+<pre><code>## no sobrepeso    sobrepeso 
+##          256          251</code></pre>
+</div>
+</div>
+<div id="segunda-parte" class="section level2">
+<h2>Segunda parte</h2>
+<div id="section-3" class="section level3">
+<h3>1)</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Fijamos una semilla para asegurar la reproducibilidad</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># Filtramos la base para quedarnos solo con mujeres (Gender == 0)</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>mujeres <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> <span class="fu">filter</span>(Gender <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co"># Seleccionamos aleatoriamente 75 mujeres de cada clase (75 + 75 = 150 en total)</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>muestra_sobrepeso <span class="ot">&lt;-</span> mujeres <span class="sc">|&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>  <span class="fu">filter</span>(EN <span class="sc">==</span> <span class="st">&quot;sobrepeso&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>  <span class="fu">sample_n</span>(<span class="dv">75</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>muestra_no_sobrepeso <span class="ot">&lt;-</span> mujeres <span class="sc">|&gt;</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>  <span class="fu">filter</span>(EN <span class="sc">==</span> <span class="st">&quot;no sobrepeso&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>  <span class="fu">sample_n</span>(<span class="dv">75</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co"># Construimos los datos de entrenamiento (50 de cada clase)</span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>train_sobrepeso <span class="ot">&lt;-</span> muestra_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>train_no_sobrepeso <span class="ot">&lt;-</span> muestra_no_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a>datos_entrenamiento <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(train_sobrepeso, train_no_sobrepeso)</span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="co"># Construimos los datos de prueba con los restantes (25 de cada clase)</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a>test_sobrepeso <span class="ot">&lt;-</span> muestra_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">51</span><span class="sc">:</span><span class="dv">75</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>test_no_sobrepeso <span class="ot">&lt;-</span> muestra_no_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">51</span><span class="sc">:</span><span class="dv">75</span>)</span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a>datos_prueba <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(test_sobrepeso, test_no_sobrepeso)</span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a><span class="co"># Verificamos que se haya hecho correctamente</span></span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Total datos de entrenamiento:&quot;</span>, <span class="fu">nrow</span>(datos_entrenamiento), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Total datos de entrenamiento: 100</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Distribución en Entrenamiento:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Distribución en Entrenamiento:</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos_entrenamiento<span class="sc">$</span>EN))</span></code></pre></div>
+<pre><code>## 
+## no sobrepeso    sobrepeso 
+##           50           50</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Total datos de prueba:&quot;</span>, <span class="fu">nrow</span>(datos_prueba), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## Total datos de prueba: 50</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Distribución en Prueba:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Distribución en Prueba:</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos_prueba<span class="sc">$</span>EN))</span></code></pre></div>
+<pre><code>## 
+## no sobrepeso    sobrepeso 
+##           25           25</code></pre>
+</div>
+<div id="section-4" class="section level3">
+<h3>2)</h3>
+<p>Recordamos las 8 variables utilizadas en el desarrollo del EP09:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code></pre></div>
+<pre><code>## Warning: package &#39;knitr&#39; was built under R version 4.5.3</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># 1. Crear un data.frame con las variables y sus descripciones</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>tabla_variables <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">c</span>(<span class="st">&quot;Knee.Girth&quot;</span>, <span class="st">&quot;Bitrochanteric.diameter&quot;</span>, <span class="st">&quot;Chest.diameter&quot;</span>, <span class="st">&quot;Calf.Maximum.Girth&quot;</span>, <span class="st">&quot;Bicep.Girth&quot;</span>, <span class="st">&quot;Chest.depth&quot;</span>, <span class="st">&quot;Chest.Girth&quot;</span>, <span class="st">&quot;Elbows.diameter&quot;</span>),</span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>  Descripción <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>    <span class="st">&quot;Grosor promedio de ambas rodillas, posición levemente flectada, medición arriba de la rótula&quot;</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>    <span class="st">&quot;Diámetro bitrocantéreo (a la altura de las caderas)&quot;</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>    <span class="st">&quot;Diámetro del pecho (a la altura de los pezones)&quot;</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>    <span class="st">&quot;Grosor promedio de la parte más ancha de ambas pantorrillas&quot;</span>, <span class="st">&quot;Grosor promedio de ambos bíceps, brazos flectados&quot;</span>, <span class="st">&quot;Profundidad del pecho (entre la espina y el esternón a la altura de los pezones)&quot;</span>, <span class="st">&quot;Grosor del pecho, sobre tejido mamario en mujeres y a la altura de los pezones en varones&quot;</span>, <span class="st">&quot;Suma de los diámetros de los codos&quot;</span></span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a>  )</span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a>)</span>
+<span id="cb28-11"><a href="#cb28-11" tabindex="-1"></a></span>
+<span id="cb28-12"><a href="#cb28-12" tabindex="-1"></a><span class="co"># 2. Generar la tabla en formato Markdown con kable</span></span>
+<span id="cb28-13"><a href="#cb28-13" tabindex="-1"></a><span class="fu">kable</span>(</span>
+<span id="cb28-14"><a href="#cb28-14" tabindex="-1"></a>  tabla_variables, </span>
+<span id="cb28-15"><a href="#cb28-15" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Variable&quot;</span>, <span class="st">&quot;Descripción&quot;</span>),</span>
+<span id="cb28-16"><a href="#cb28-16" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Descripción de las variables utilizadas en el estudio.&quot;</span></span>
+<span id="cb28-17"><a href="#cb28-17" tabindex="-1"></a>)</span></code></pre></div>
+<table>
+<caption>Descripción de las variables utilizadas en el
+estudio.</caption>
+<colgroup>
+<col width="20%" />
+<col width="79%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Variable</th>
+<th align="left">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Knee.Girth</td>
+<td align="left">Grosor promedio de ambas rodillas, posición levemente
+flectada, medición arriba de la rótula</td>
+</tr>
+<tr class="even">
+<td align="left">Bitrochanteric.diameter</td>
+<td align="left">Diámetro bitrocantéreo (a la altura de las
+caderas)</td>
+</tr>
+<tr class="odd">
+<td align="left">Chest.diameter</td>
+<td align="left">Diámetro del pecho (a la altura de los pezones)</td>
+</tr>
+<tr class="even">
+<td align="left">Calf.Maximum.Girth</td>
+<td align="left">Grosor promedio de la parte más ancha de ambas
+pantorrillas</td>
+</tr>
+<tr class="odd">
+<td align="left">Bicep.Girth</td>
+<td align="left">Grosor promedio de ambos bíceps, brazos flectados</td>
+</tr>
+<tr class="even">
+<td align="left">Chest.depth</td>
+<td align="left">Profundidad del pecho (entre la espina y el esternón a
+la altura de los pezones)</td>
+</tr>
+<tr class="odd">
+<td align="left">Chest.Girth</td>
+<td align="left">Grosor del pecho, sobre tejido mamario en mujeres y a
+la altura de los pezones en varones</td>
+</tr>
+<tr class="even">
+<td align="left">Elbows.diameter</td>
+<td align="left">Suma de los diámetros de los codos</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
