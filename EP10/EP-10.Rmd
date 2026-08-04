@@ -166,7 +166,7 @@ tabla_variables <- data.frame(
 
 # 2. Generar la tabla en formato Markdown con kable
 kable(
-  tabla_variables, 
+  tabla_variables,
   col.names = c("Variable", "Descripción"),
   caption = "Descripción de las variables utilizadas en el estudio."
 )
@@ -184,7 +184,7 @@ Como buscamos predecir la variable EN creada, la cual depende del IMC, y a su ve
 
 ```{r}
 # Selecciona únicamente las columnas que son numéricas o enteras
-datos_numericos <- datos_entrenamiento |> 
+datos_numericos <- datos_entrenamiento |>
   select(where(is.numeric))
 
 matriz_correlacion <- cor(datos_numericos, use = "complete.obs")
@@ -211,14 +211,18 @@ Para agregar predictores al modelo obtenido en el paso 4, se recomienda usar her
 # Modelo mínimo (el obtenido en el paso 4) y modelo máximo
 # (agregando las 8 variables candidatas recordadas en el paso 2)
 nulo <- modelo_log
-maxi <- glm(EN ~ Waist.Girth + Knee.Girth + Bicep.Girth + Bitrochanteric.diameter +
-              Chest.depth + Chest.diameter + Chest.Girth + Calf.Maximum.Girth +
-              Elbows.diameter,
-            family = binomial(link = "logit"), data = datos_entrenamiento)
+maxi <- glm(
+  EN ~ Waist.Girth + Knee.Girth + Bicep.Girth + Bitrochanteric.diameter +
+    Chest.depth + Chest.diameter + Chest.Girth + Calf.Maximum.Girth +
+    Elbows.diameter,
+  family = binomial(link = "logit"), data = datos_entrenamiento
+)
 
-# regresión escalonada 
-modelo_step <- step(nulo, scope = list(lower = nulo, upper = maxi),
-                     direction = "both", trace = 1)
+# regresión escalonada
+modelo_step <- step(nulo,
+  scope = list(lower = nulo, upper = maxi),
+  direction = "both", trace = 1
+)
 
 cat("\nModelo obtenido con regresión escalonada:\n")
 print(summary(modelo_step))
@@ -229,7 +233,57 @@ print(anova(nulo, modelo_step, test = "LRT"))
 No se utiliza la regresión hacia adelante manual con add1(), porque esta alternativa se utiliza solo cuando la regresión escalonada realizada falla por problemas de convergencia, lo cuál no sucede en este caso.
 
 ### 6)
+Para evaluar la confiabilidad y generalidad del modelo obtenido mediante regresión escalonada (paso 5), se analizarán tres aspectos fundamentales: la bondad de ajuste (Pseudo $R^2$), el supuesto de no multicolinealidad (VIF) y la posible presencia de casos sobreinfluyentes (Distancia de Cook) que puedan estar distorsionando los coeficientes.
+```{r}
+library(car)
+library(DescTools)
 
+cat("--- 1. EVALUACIÓN DEL NIVEL DE AJUSTE ---\n")
+# Se utiliza el Pseudo R-cuadrado de McFadden como métrica de bondad de ajuste.
+# En regresión logística, valores entre 0.2 y 0.4 ya se consideran excelentes.
+pseudo_r2 <- PseudoR2(modelo_step, which = "McFadden")
+cat("Pseudo R-cuadrado de McFadden:", round(pseudo_r2, 3), "\n")
+
+cat("\n--- 2. CONDICIONES: MULTICOLINEALIDAD (VIF) ---\n")
+# Se revisa el Factor de Inflación de la Varianza (VIF) para asegurar que
+# las variables predictoras aportan información independiente.
+# Si un valor supera el umbral de 5, indicaría multicolinealidad problemática.
+print(vif(modelo_step))
+
+cat("\n--- 3. CASOS SOBREINFLUYENTES (Distancia de Cook) ---\n")
+# Se calcula la distancia de Cook para identificar observaciones con valores
+# atípicos que ejerzan una influencia desproporcionada en el modelo.
+distancia_cook <- cooks.distance(modelo_step)
+
+# Se define el umbral estándar (4 / n) para catalogar un caso como altamente influyente
+umbral_cook <- 4 / nrow(datos_entrenamiento)
+casos_influyentes <- which(distancia_cook > umbral_cook)
+
+cat("Umbral de Distancia de Cook:", round(umbral_cook, 4), "\n")
+cat("Cantidad de casos que superan el umbral:", length(casos_influyentes), "\n")
+if (length(casos_influyentes) > 0) {
+  print(casos_influyentes)
+}
+```
+Como se observa en los resultados anteriores, el ajuste del modelo es bueno y los valores VIF son todos cercanos a 1, por lo que se descartan problemas de multicolinealidad. Sin embargo, la prueba de Distancia de Cook revela la existencia de observaciones que superan el umbral de influencia.
+
+Para solucionar este problema y asegurar que el modelo sea generalizable (y no esté sesgado por estos valores atípicos), se procede a depurar el conjunto de entrenamiento eliminando estos casos y se ajusta el modelo definitivo.
+```{r}
+cat("\n--- ARREGLO DEL MODELO (DEPURACIÓN) ---\n")
+# 1. Se crea un nuevo set de datos excluyendo las filas problemáticas
+datos_entrenamiento_limpios <- datos_entrenamiento[-casos_influyentes, ]
+
+# 2. Se actualiza el modelo escalonado utilizando únicamente los datos limpios
+modelo_final <- update(modelo_step, data = datos_entrenamiento_limpios)
+
+# 3. Se verifica el impacto de la limpieza en la bondad de ajuste
+pseudo_r2_final <- PseudoR2(modelo_final, which = "McFadden")
+cat("Nuevo Pseudo R-cuadrado sin outliers:", round(pseudo_r2_final, 3), "\n")
+
+# Se expone el resumen del modelo definitivo
+summary(modelo_final)
+```
+Al eliminar los casos influyentes, podemos notar cómo el Pseudo R-cuadrado experimenta una mejora o se estabiliza, indicando que hemos obtenido un modelo final robusto, confiable y teóricamente apto para realizar predicciones sobre datos no vistos.
 ### 7)
 
 # Conclusiones

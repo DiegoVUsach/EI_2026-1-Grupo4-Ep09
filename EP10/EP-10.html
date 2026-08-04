@@ -3034,7 +3034,7 @@ valor de IMC y se transforma a factor para futuros análisis.</p>
 <span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a></span>
 <span id="cb24-14"><a href="#cb24-14" tabindex="-1"></a><span class="co"># 2. Generar la tabla en formato Markdown con kable</span></span>
 <span id="cb24-15"><a href="#cb24-15" tabindex="-1"></a><span class="fu">kable</span>(</span>
-<span id="cb24-16"><a href="#cb24-16" tabindex="-1"></a>  tabla_variables, </span>
+<span id="cb24-16"><a href="#cb24-16" tabindex="-1"></a>  tabla_variables,</span>
 <span id="cb24-17"><a href="#cb24-17" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Variable&quot;</span>, <span class="st">&quot;Descripción&quot;</span>),</span>
 <span id="cb24-18"><a href="#cb24-18" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Descripción de las variables utilizadas en el estudio.&quot;</span></span>
 <span id="cb24-19"><a href="#cb24-19" tabindex="-1"></a>)</span></code></pre></div>
@@ -3111,7 +3111,7 @@ correlación entre el IMC y las demás variables. El mayor valor de
 correlación lo presenta lo presenta la variable Waist.Girth que será
 nuevamente utilizada como predictor inicial</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="co"># Selecciona únicamente las columnas que son numéricas o enteras</span></span>
-<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>datos_numericos <span class="ot">&lt;-</span> datos_entrenamiento <span class="sc">|&gt;</span> </span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>datos_numericos <span class="ot">&lt;-</span> datos_entrenamiento <span class="sc">|&gt;</span></span>
 <span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
 <span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a></span>
 <span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>matriz_correlacion <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_numericos, <span class="at">use =</span> <span class="st">&quot;complete.obs&quot;</span>)</span></code></pre></div>
@@ -3187,14 +3187,18 @@ convergencia.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="co"># Modelo mínimo (el obtenido en el paso 4) y modelo máximo</span></span>
 <span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a><span class="co"># (agregando las 8 variables candidatas recordadas en el paso 2)</span></span>
 <span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>nulo <span class="ot">&lt;-</span> modelo_log</span>
-<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>maxi <span class="ot">&lt;-</span> <span class="fu">glm</span>(EN <span class="sc">~</span> Waist.Girth <span class="sc">+</span> Knee.Girth <span class="sc">+</span> Bicep.Girth <span class="sc">+</span> Bitrochanteric.diameter <span class="sc">+</span></span>
-<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>              Chest.depth <span class="sc">+</span> Chest.diameter <span class="sc">+</span> Chest.Girth <span class="sc">+</span> Calf.Maximum.Girth <span class="sc">+</span></span>
-<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a>              Elbows.diameter,</span>
-<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a>            <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>), <span class="at">data =</span> datos_entrenamiento)</span>
-<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a></span>
-<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a><span class="co"># regresión escalonada </span></span>
-<span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a>modelo_step <span class="ot">&lt;-</span> <span class="fu">step</span>(nulo, <span class="at">scope =</span> <span class="fu">list</span>(<span class="at">lower =</span> nulo, <span class="at">upper =</span> maxi),</span>
-<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a>                     <span class="at">direction =</span> <span class="st">&quot;both&quot;</span>, <span class="at">trace =</span> <span class="dv">1</span>)</span></code></pre></div>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>maxi <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>  EN <span class="sc">~</span> Waist.Girth <span class="sc">+</span> Knee.Girth <span class="sc">+</span> Bicep.Girth <span class="sc">+</span> Bitrochanteric.diameter <span class="sc">+</span></span>
+<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a>    Chest.depth <span class="sc">+</span> Chest.diameter <span class="sc">+</span> Chest.Girth <span class="sc">+</span> Calf.Maximum.Girth <span class="sc">+</span></span>
+<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a>    Elbows.diameter,</span>
+<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>), <span class="at">data =</span> datos_entrenamiento</span>
+<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a>)</span>
+<span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a><span class="co"># regresión escalonada</span></span>
+<span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a>modelo_step <span class="ot">&lt;-</span> <span class="fu">step</span>(nulo,</span>
+<span id="cb35-13"><a href="#cb35-13" tabindex="-1"></a>  <span class="at">scope =</span> <span class="fu">list</span>(<span class="at">lower =</span> nulo, <span class="at">upper =</span> maxi),</span>
+<span id="cb35-14"><a href="#cb35-14" tabindex="-1"></a>  <span class="at">direction =</span> <span class="st">&quot;both&quot;</span>, <span class="at">trace =</span> <span class="dv">1</span></span>
+<span id="cb35-15"><a href="#cb35-15" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Start:  AIC=74.92
 ## EN ~ Waist.Girth
 ## 
@@ -3296,9 +3300,102 @@ caso.</p>
 </div>
 <div id="section-8" class="section level3">
 <h3>6)</h3>
-</div>
-<div id="section-9" class="section level3">
-<h3>7)</h3>
+<p>Para evaluar la confiabilidad y generalidad del modelo obtenido
+mediante regresión escalonada (paso 5), se analizarán tres aspectos
+fundamentales: la bondad de ajuste (Pseudo <span class="math inline">\(R^2\)</span>), el supuesto de no multicolinealidad
+(VIF) y la posible presencia de casos sobreinfluyentes (Distancia de
+Cook) que puedan estar distorsionando los coeficientes.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a><span class="fu">library</span>(DescTools)</span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;--- 1. EVALUACIÓN DEL NIVEL DE AJUSTE ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## --- 1. EVALUACIÓN DEL NIVEL DE AJUSTE ---</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="co"># Se utiliza el Pseudo R-cuadrado de McFadden como métrica de bondad de ajuste.</span></span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a><span class="co"># En regresión logística, valores entre 0.2 y 0.4 ya se consideran excelentes.</span></span>
+<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a>pseudo_r2 <span class="ot">&lt;-</span> <span class="fu">PseudoR2</span>(modelo_step, <span class="at">which =</span> <span class="st">&quot;McFadden&quot;</span>)</span>
+<span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Pseudo R-cuadrado de McFadden:&quot;</span>, <span class="fu">round</span>(pseudo_r2, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Pseudo R-cuadrado de McFadden: 0.632</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- 2. CONDICIONES: MULTICOLINEALIDAD (VIF) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## --- 2. CONDICIONES: MULTICOLINEALIDAD (VIF) ---</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a><span class="co"># Se revisa el Factor de Inflación de la Varianza (VIF) para asegurar que</span></span>
+<span id="cb51-2"><a href="#cb51-2" tabindex="-1"></a><span class="co"># las variables predictoras aportan información independiente.</span></span>
+<span id="cb51-3"><a href="#cb51-3" tabindex="-1"></a><span class="co"># Si un valor supera el umbral de 5, indicaría multicolinealidad problemática.</span></span>
+<span id="cb51-4"><a href="#cb51-4" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">vif</span>(modelo_step))</span></code></pre></div>
+<pre><code>##             Waist.Girth             Chest.Girth Bitrochanteric.diameter 
+##                1.251149                1.302027                1.084001 
+##              Knee.Girth 
+##                1.042610</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- 3. CASOS SOBREINFLUYENTES (Distancia de Cook) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## --- 3. CASOS SOBREINFLUYENTES (Distancia de Cook) ---</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a><span class="co"># Se calcula la distancia de Cook para identificar observaciones con valores</span></span>
+<span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a><span class="co"># atípicos que ejerzan una influencia desproporcionada en el modelo.</span></span>
+<span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a>distancia_cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(modelo_step)</span>
+<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a></span>
+<span id="cb55-5"><a href="#cb55-5" tabindex="-1"></a><span class="co"># Se define el umbral estándar (4 / n) para catalogar un caso como altamente influyente</span></span>
+<span id="cb55-6"><a href="#cb55-6" tabindex="-1"></a>umbral_cook <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">nrow</span>(datos_entrenamiento)</span>
+<span id="cb55-7"><a href="#cb55-7" tabindex="-1"></a>casos_influyentes <span class="ot">&lt;-</span> <span class="fu">which</span>(distancia_cook <span class="sc">&gt;</span> umbral_cook)</span>
+<span id="cb55-8"><a href="#cb55-8" tabindex="-1"></a></span>
+<span id="cb55-9"><a href="#cb55-9" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Umbral de Distancia de Cook:&quot;</span>, <span class="fu">round</span>(umbral_cook, <span class="dv">4</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Umbral de Distancia de Cook: 0.04</code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Cantidad de casos que superan el umbral:&quot;</span>, <span class="fu">length</span>(casos_influyentes), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Cantidad de casos que superan el umbral: 9</code></pre>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(casos_influyentes) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a>  <span class="fu">print</span>(casos_influyentes)</span>
+<span id="cb59-3"><a href="#cb59-3" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>##  9 29 36 37 45 53 82 87 98 
+##  9 29 36 37 45 53 82 87 98</code></pre>
+<p>Como se observa en los resultados anteriores, el ajuste del modelo es
+bueno y los valores VIF son todos cercanos a 1, por lo que se descartan
+problemas de multicolinealidad. Sin embargo, la prueba de Distancia de
+Cook revela la existencia de observaciones que superan el umbral de
+influencia.</p>
+<p>Para solucionar este problema y asegurar que el modelo sea
+generalizable (y no esté sesgado por estos valores atípicos), se procede
+a depurar el conjunto de entrenamiento eliminando estos casos y se
+ajusta el modelo definitivo.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- ARREGLO DEL MODELO (DEPURACIÓN) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## --- ARREGLO DEL MODELO (DEPURACIÓN) ---</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a><span class="co"># 1. Se crea un nuevo set de datos excluyendo las filas problemáticas</span></span>
+<span id="cb63-2"><a href="#cb63-2" tabindex="-1"></a>datos_entrenamiento_limpios <span class="ot">&lt;-</span> datos_entrenamiento[<span class="sc">-</span>casos_influyentes, ]</span>
+<span id="cb63-3"><a href="#cb63-3" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="#cb63-4" tabindex="-1"></a><span class="co"># 2. Se actualiza el modelo escalonado utilizando únicamente los datos limpios</span></span>
+<span id="cb63-5"><a href="#cb63-5" tabindex="-1"></a>modelo_final <span class="ot">&lt;-</span> <span class="fu">update</span>(modelo_step, <span class="at">data =</span> datos_entrenamiento_limpios)</span></code></pre></div>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="co"># 3. Se verifica el impacto de la limpieza en la bondad de ajuste</span></span>
+<span id="cb65-2"><a href="#cb65-2" tabindex="-1"></a>pseudo_r2_final <span class="ot">&lt;-</span> <span class="fu">PseudoR2</span>(modelo_final, <span class="at">which =</span> <span class="st">&quot;McFadden&quot;</span>)</span>
+<span id="cb65-3"><a href="#cb65-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Nuevo Pseudo R-cuadrado sin outliers:&quot;</span>, <span class="fu">round</span>(pseudo_r2_final, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Nuevo Pseudo R-cuadrado sin outliers: 0.862</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" tabindex="-1"></a><span class="co"># Se expone el resumen del modelo definitivo</span></span>
+<span id="cb67-2"><a href="#cb67-2" tabindex="-1"></a><span class="fu">summary</span>(modelo_final)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = EN ~ Waist.Girth + Chest.Girth + Bitrochanteric.diameter + 
+##     Knee.Girth, family = binomial(link = &quot;logit&quot;), data = datos_entrenamiento_limpios)
+## 
+## Coefficients:
+##                          Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)             -181.0898    72.8199  -2.487   0.0129 *
+## Waist.Girth                0.7040     0.3171   2.220   0.0264 *
+## Chest.Girth                0.7399     0.4553   1.625   0.1042  
+## Bitrochanteric.diameter    1.0380     0.6906   1.503   0.1328  
+## Knee.Girth                 0.9093     0.5740   1.584   0.1132  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 126.142  on 90  degrees of freedom
+## Residual deviance:  17.439  on 86  degrees of freedom
+## AIC: 27.439
+## 
+## Number of Fisher Scoring iterations: 10</code></pre>
+<p>Al eliminar los casos influyentes, podemos notar cómo el Pseudo
+R-cuadrado experimenta una mejora o se estabiliza, indicando que hemos
+obtenido un modelo final robusto, confiable y teóricamente apto para
+realizar predicciones sobre datos no vistos. ### 7)</p>
 </div>
 </div>
 </div>
