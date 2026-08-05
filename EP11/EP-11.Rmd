@@ -1,0 +1,56 @@
+---
+title: "EP11-Estadistica"
+author: "Equipo 4"
+date: "tbd-07-2026"
+output:
+  html_document:
+    toc: true # Activa la tabla de contenidos (índice)
+    toc_float: true # Permite que el índice se mueva al hacer scroll
+    toc_depth: 3 # Define la cantidad de niveles de títulos
+    theme: flatly # Tema visual (bootstrap)
+    highlight: pygments # Define el estilo del código (colores)
+    df_print: paged # Hace paginado al mostrar data frames
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, # Muestra código R en el documento
+  # warning   = FALSE, # Oculta advertencias
+  message = FALSE, # Oculta mensajes (como los de carga de paquetes)
+  fig.align = "center", # Centra imágenes
+  fig.width = 7,
+  fig.height = 4 # Parámetros para el tamaño de gráficas
+)
+```
+
+
+# Contexto
+
+Para este ejercicio usaremos los datos de medidas anatómicas recolectados por Heinz et al. (2003) que ya hemos utilizado en los ejercicios prácticos anteriores (disponibles en el archivo "EP09 Datos.csv"), 
+con la adición de las variables IMC y EN consideradas en el ejercicio práctico anterior.
+
+# Preguntas
+
+1. Definir la semilla a utilizar, que corresponde a los primeros cinco dígitos del RUN del integrante de mayor edad del equipo.
+2. Seleccionar una muestra de 100 personas, asegurando que la mitad tenga estado nutricional “sobrepeso” y la otra mitad “no sobrepeso”.
+3. Usando las herramientas del paquete leaps, realizar una búsqueda exhaustiva para seleccionar entre dos y ocho predictores que ayuden a estimar la variable Peso (Weight), obviamente sin considerar las nuevas variables IMC ni EN, y luego utilizar las funciones del paquete caret para construir un modelo de regresión lineal múltiple con los predictores escogidos y evaluarlo usando bootstrapping.
+4. Haciendo un poco de investigación sobre el paquete caret, en particular cómo hacer Recursive Feature Elimination (RFE), construir un modelo de regresión lineal múltiple para predecir la variable IMC que incluya entre 10 y 20 predictores, seleccionando el conjunto de variables que maximice R2 y que use cinco repeticiones de validación cruzada de cinco pliegues para evitar el sobreajuste (obviamente no se debe considerar las variables Peso, Estatura ni estado nutricional –Weight, Height, EN respectivamente).
+5. Usando RFE, construir un modelo de regresión logística múltiple para la variable EN que incluya el conjunto de predictores, entre dos y seis, que entregue la mejor curva ROC y que utilice validación cruzada dejando uno fuera para evitar el sobreajuste (obviamente no se debe considerar las variables Peso, Estatura –Weight y Height respectivamente– ni IMC).
+6. Pronunciarse sobre la confiabilidad y el poder predictivo de los modelos obtenidos.
+
+## Primera parte
+
+### 1) 
+
+```{r}
+library(dplyr)
+
+# Cargar los datos
+datos <- read.csv2("EP09 Datos.csv")
+```
+
+# Referencias
+
+Jara, J. L., & Köhler, J. (s. f.). Inferencia y modelos estadísticos [Perusall].
+
+Heinz, G., Peterson, L. J., Johnson, R. W., & Kerk, C. J. (2003). Exploring Relationships in Body Dimensions. Journal Of Statistics Education, 11(2). https://doi.org/10.1080/10691898.2003.11910711
