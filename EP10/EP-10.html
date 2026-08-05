@@ -2910,13 +2910,13 @@ construcción en términos de sensibilidad y especificidad.</p></li>
 <p>Se pide crear la variable IMC (índice de masa corporal): el peso (kg)
 dividido por el cuadrado de la estatura (m) y debido a que height está
 en cm en el archivo original, se divide por 100.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># Cargar los datos</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">&quot;EP09 Datos.csv&quot;</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMC =</span> Weight <span class="sc">/</span> (Height <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.5.3</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Cargar los datos</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="st">&quot;EP09 Datos.csv&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMC =</span> Weight <span class="sc">/</span> (Height <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
 </div>
 <div id="section-1" class="section level3">
 <h3>2)</h3>
@@ -2925,20 +2925,20 @@ en cm en el archivo original, se divide por 100.</p>
 <li>sobrepeso: IMC &gt;= 23,2</li>
 <li>no sobrepeso: IMC &lt; 23,2</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_sobrepeso =</span> <span class="fu">ifelse</span>(IMC <span class="sc">&gt;=</span> <span class="fl">23.2</span>, <span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Resultados</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">head</span>(datos <span class="sc">|&gt;</span> <span class="fu">select</span>(Weight, Height, IMC, clase_sobrepeso))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_sobrepeso =</span> <span class="fu">ifelse</span>(IMC <span class="sc">&gt;=</span> <span class="fl">23.2</span>, <span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># Resultados</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">head</span>(datos <span class="sc">|&gt;</span> <span class="fu">select</span>(Weight, Height, IMC, clase_sobrepeso))</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Weight"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Height"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["IMC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["clase_sobrepeso"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"65.6","2":"174.0","3":"21.66733","4":"no sobrepeso","_rn_":"1"},{"1":"71.8","2":"175.3","3":"23.36472","4":"sobrepeso","_rn_":"2"},{"1":"80.7","2":"193.5","3":"21.55319","4":"no sobrepeso","_rn_":"3"},{"1":"72.6","2":"186.5","3":"20.87272","4":"no sobrepeso","_rn_":"4"},{"1":"78.8","2":"187.2","3":"22.48612","4":"no sobrepeso","_rn_":"5"},{"1":"74.8","2":"181.5","3":"22.70640","4":"no sobrepeso","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Distribución de la clasificación:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Distribución de la clasificación:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Distribución de la clasificación:</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos<span class="sc">$</span>clase_sobrepeso))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos<span class="sc">$</span>clase_sobrepeso))</span></code></pre></div>
 <pre><code>## 
 ## no sobrepeso    sobrepeso 
 ##          256          251</code></pre>
@@ -2947,24 +2947,24 @@ en cm en el archivo original, se divide por 100.</p>
 <h3>3)</h3>
 <p>Se crea la variable dicotómica EN (estado nutricional) de acuerdo al
 valor de IMC y se transforma a factor para futuros análisis.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Crear la variable dicotómica EN</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EN =</span> <span class="fu">ifelse</span>(IMC <span class="sc">&gt;=</span> <span class="fl">23.2</span>, <span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="co"># Convertir a factor para que R entienda que es una variable categórica</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EN =</span> <span class="fu">factor</span>(EN, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no sobrepeso&quot;</span>, <span class="st">&quot;sobrepeso&quot;</span>)))</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co"># Verificamos los resultados mostrando las primeras filas</span></span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="fu">head</span>(datos <span class="sc">|&gt;</span> <span class="fu">select</span>(Weight, Height, IMC, EN))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Crear la variable dicotómica EN</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EN =</span> <span class="fu">ifelse</span>(IMC <span class="sc">&gt;=</span> <span class="fl">23.2</span>, <span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="co"># Convertir a factor para que R entienda que es una variable categórica</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EN =</span> <span class="fu">factor</span>(EN, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no sobrepeso&quot;</span>, <span class="st">&quot;sobrepeso&quot;</span>)))</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># Verificamos los resultados mostrando las primeras filas</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="fu">head</span>(datos <span class="sc">|&gt;</span> <span class="fu">select</span>(Weight, Height, IMC, EN))</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Weight"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Height"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["IMC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["EN"],"name":[4],"type":["fct"],"align":["left"]}],"data":[{"1":"65.6","2":"174.0","3":"21.66733","4":"no sobrepeso","_rn_":"1"},{"1":"71.8","2":"175.3","3":"23.36472","4":"sobrepeso","_rn_":"2"},{"1":"80.7","2":"193.5","3":"21.55319","4":"no sobrepeso","_rn_":"3"},{"1":"72.6","2":"186.5","3":"20.87272","4":"no sobrepeso","_rn_":"4"},{"1":"78.8","2":"187.2","3":"22.48612","4":"no sobrepeso","_rn_":"5"},{"1":"74.8","2":"181.5","3":"22.70640","4":"no sobrepeso","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Vemos un resumen de la nueva variable dicotómica</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Distribución del Estado Nutricional (EN):</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Vemos un resumen de la nueva variable dicotómica</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Distribución del Estado Nutricional (EN):</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Distribución del Estado Nutricional (EN):</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">summary</span>(datos<span class="sc">$</span>EN)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">summary</span>(datos<span class="sc">$</span>EN)</span></code></pre></div>
 <pre><code>## no sobrepeso    sobrepeso 
 ##          256          251</code></pre>
 </div>
@@ -2973,45 +2973,45 @@ valor de IMC y se transforma a factor para futuros análisis.</p>
 <h2>Segunda parte</h2>
 <div id="section-3" class="section level3">
 <h3>1)</h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Fijamos una semilla para asegurar la reproducibilidad</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># Filtramos la base para quedarnos solo con mujeres (Gender == 0)</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>mujeres <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> <span class="fu">filter</span>(Gender <span class="sc">==</span> <span class="dv">0</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co"># Seleccionamos aleatoriamente 75 mujeres de cada clase (75 + 75 = 150 en total)</span></span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>muestra_sobrepeso <span class="ot">&lt;-</span> mujeres <span class="sc">|&gt;</span></span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>  <span class="fu">filter</span>(EN <span class="sc">==</span> <span class="st">&quot;sobrepeso&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>  <span class="fu">sample_n</span>(<span class="dv">75</span>)</span>
-<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>muestra_no_sobrepeso <span class="ot">&lt;-</span> mujeres <span class="sc">|&gt;</span></span>
-<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>  <span class="fu">filter</span>(EN <span class="sc">==</span> <span class="st">&quot;no sobrepeso&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>  <span class="fu">sample_n</span>(<span class="dv">75</span>)</span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a></span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co"># Construimos los datos de entrenamiento (50 de cada clase)</span></span>
-<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>train_sobrepeso <span class="ot">&lt;-</span> muestra_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
-<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>train_no_sobrepeso <span class="ot">&lt;-</span> muestra_no_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
-<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a>datos_entrenamiento <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(train_sobrepeso, train_no_sobrepeso)</span>
-<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a></span>
-<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co"># Construimos los datos de prueba con los restantes (25 de cada clase)</span></span>
-<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a>test_sobrepeso <span class="ot">&lt;-</span> muestra_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">51</span><span class="sc">:</span><span class="dv">75</span>)</span>
-<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a>test_no_sobrepeso <span class="ot">&lt;-</span> muestra_no_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">51</span><span class="sc">:</span><span class="dv">75</span>)</span>
-<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a>datos_prueba <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(test_sobrepeso, test_no_sobrepeso)</span>
-<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a></span>
-<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="co"># Verificamos que se haya hecho correctamente</span></span>
-<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Total datos de entrenamiento:&quot;</span>, <span class="fu">nrow</span>(datos_entrenamiento), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Fijamos una semilla para asegurar la reproducibilidad</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># Filtramos la base para quedarnos solo con mujeres (Gender == 0)</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>mujeres <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> <span class="fu">filter</span>(Gender <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co"># Seleccionamos aleatoriamente 75 mujeres de cada clase (75 + 75 = 150 en total)</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>muestra_sobrepeso <span class="ot">&lt;-</span> mujeres <span class="sc">|&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>  <span class="fu">filter</span>(EN <span class="sc">==</span> <span class="st">&quot;sobrepeso&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>  <span class="fu">sample_n</span>(<span class="dv">75</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>muestra_no_sobrepeso <span class="ot">&lt;-</span> mujeres <span class="sc">|&gt;</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>  <span class="fu">filter</span>(EN <span class="sc">==</span> <span class="st">&quot;no sobrepeso&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>  <span class="fu">sample_n</span>(<span class="dv">75</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co"># Construimos los datos de entrenamiento (50 de cada clase)</span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>train_sobrepeso <span class="ot">&lt;-</span> muestra_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>train_no_sobrepeso <span class="ot">&lt;-</span> muestra_no_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a>datos_entrenamiento <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(train_sobrepeso, train_no_sobrepeso)</span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="co"># Construimos los datos de prueba con los restantes (25 de cada clase)</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a>test_sobrepeso <span class="ot">&lt;-</span> muestra_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">51</span><span class="sc">:</span><span class="dv">75</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>test_no_sobrepeso <span class="ot">&lt;-</span> muestra_no_sobrepeso <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">51</span><span class="sc">:</span><span class="dv">75</span>)</span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a>datos_prueba <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(test_sobrepeso, test_no_sobrepeso)</span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a><span class="co"># Verificamos que se haya hecho correctamente</span></span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Total datos de entrenamiento:&quot;</span>, <span class="fu">nrow</span>(datos_entrenamiento), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Total datos de entrenamiento: 100</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Distribución en Entrenamiento:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Distribución en Entrenamiento:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Distribución en Entrenamiento:</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos_entrenamiento<span class="sc">$</span>EN))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos_entrenamiento<span class="sc">$</span>EN))</span></code></pre></div>
 <pre><code>## 
 ## no sobrepeso    sobrepeso 
 ##           50           50</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Total datos de prueba:&quot;</span>, <span class="fu">nrow</span>(datos_prueba), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Total datos de prueba:&quot;</span>, <span class="fu">nrow</span>(datos_prueba), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Total datos de prueba: 50</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Distribución en Prueba:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Distribución en Prueba:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Distribución en Prueba:</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos_prueba<span class="sc">$</span>EN))</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(datos_prueba<span class="sc">$</span>EN))</span></code></pre></div>
 <pre><code>## 
 ## no sobrepeso    sobrepeso 
 ##           25           25</code></pre>
@@ -3019,25 +3019,25 @@ valor de IMC y se transforma a factor para futuros análisis.</p>
 <div id="section-4" class="section level3">
 <h3>2)</h3>
 <p>Recordamos las 8 variables utilizadas en el desarrollo del EP09:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="co"># 1. Crear un data.frame con las variables y sus descripciones</span></span>
-<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>tabla_variables <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">c</span>(<span class="st">&quot;Knee.Girth&quot;</span>, <span class="st">&quot;Bitrochanteric.diameter&quot;</span>, <span class="st">&quot;Chest.diameter&quot;</span>, <span class="st">&quot;Calf.Maximum.Girth&quot;</span>, <span class="st">&quot;Bicep.Girth&quot;</span>, <span class="st">&quot;Chest.depth&quot;</span>, <span class="st">&quot;Chest.Girth&quot;</span>, <span class="st">&quot;Elbows.diameter&quot;</span>),</span>
-<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>  Descripción <span class="ot">=</span> <span class="fu">c</span>(</span>
-<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>    <span class="st">&quot;Grosor promedio de ambas rodillas, posición levemente flectada, medición arriba de la rótula&quot;</span>,</span>
-<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a>    <span class="st">&quot;Diámetro bitrocantéreo (a la altura de las caderas)&quot;</span>,</span>
-<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>    <span class="st">&quot;Diámetro del pecho (a la altura de los pezones)&quot;</span>,</span>
-<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a>    <span class="st">&quot;Grosor promedio de la parte más ancha de ambas pantorrillas&quot;</span>, <span class="st">&quot;Grosor promedio de ambos bíceps, brazos flectados&quot;</span>, <span class="st">&quot;Profundidad del pecho (entre la espina y el esternón a la altura de los pezones)&quot;</span>, <span class="st">&quot;Grosor del pecho, sobre tejido mamario en mujeres y a la altura de los pezones en varones&quot;</span>, <span class="st">&quot;Suma de los diámetros de los codos&quot;</span></span>
-<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>  )</span>
-<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>)</span>
-<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a></span>
-<span id="cb24-14"><a href="#cb24-14" tabindex="-1"></a><span class="co"># 2. Generar la tabla en formato Markdown con kable</span></span>
-<span id="cb24-15"><a href="#cb24-15" tabindex="-1"></a><span class="fu">kable</span>(</span>
-<span id="cb24-16"><a href="#cb24-16" tabindex="-1"></a>  tabla_variables,</span>
-<span id="cb24-17"><a href="#cb24-17" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Variable&quot;</span>, <span class="st">&quot;Descripción&quot;</span>),</span>
-<span id="cb24-18"><a href="#cb24-18" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Descripción de las variables utilizadas en el estudio.&quot;</span></span>
-<span id="cb24-19"><a href="#cb24-19" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code></pre></div>
+<pre><code>## Warning: package &#39;knitr&#39; was built under R version 4.5.3</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># 1. Crear un data.frame con las variables y sus descripciones</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>tabla_variables <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">c</span>(<span class="st">&quot;Knee.Girth&quot;</span>, <span class="st">&quot;Bitrochanteric.diameter&quot;</span>, <span class="st">&quot;Chest.diameter&quot;</span>, <span class="st">&quot;Calf.Maximum.Girth&quot;</span>, <span class="st">&quot;Bicep.Girth&quot;</span>, <span class="st">&quot;Chest.depth&quot;</span>, <span class="st">&quot;Chest.Girth&quot;</span>, <span class="st">&quot;Elbows.diameter&quot;</span>),</span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>  Descripción <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>    <span class="st">&quot;Grosor promedio de ambas rodillas, posición levemente flectada, medición arriba de la rótula&quot;</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>    <span class="st">&quot;Diámetro bitrocantéreo (a la altura de las caderas)&quot;</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>    <span class="st">&quot;Diámetro del pecho (a la altura de los pezones)&quot;</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>    <span class="st">&quot;Grosor promedio de la parte más ancha de ambas pantorrillas&quot;</span>, <span class="st">&quot;Grosor promedio de ambos bíceps, brazos flectados&quot;</span>, <span class="st">&quot;Profundidad del pecho (entre la espina y el esternón a la altura de los pezones)&quot;</span>, <span class="st">&quot;Grosor del pecho, sobre tejido mamario en mujeres y a la altura de los pezones en varones&quot;</span>, <span class="st">&quot;Suma de los diámetros de los codos&quot;</span></span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a>  )</span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a>)</span>
+<span id="cb28-11"><a href="#cb28-11" tabindex="-1"></a></span>
+<span id="cb28-12"><a href="#cb28-12" tabindex="-1"></a><span class="co"># 2. Generar la tabla en formato Markdown con kable</span></span>
+<span id="cb28-13"><a href="#cb28-13" tabindex="-1"></a><span class="fu">kable</span>(</span>
+<span id="cb28-14"><a href="#cb28-14" tabindex="-1"></a>  tabla_variables,</span>
+<span id="cb28-15"><a href="#cb28-15" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Variable&quot;</span>, <span class="st">&quot;Descripción&quot;</span>),</span>
+<span id="cb28-16"><a href="#cb28-16" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Descripción de las variables utilizadas en el estudio.&quot;</span></span>
+<span id="cb28-17"><a href="#cb28-17" tabindex="-1"></a>)</span></code></pre></div>
 <table>
 <caption>Descripción de las variables utilizadas en el
 estudio.</caption>
@@ -3108,17 +3108,17 @@ circunferencia (Girth) junto a la altura.</p>
 <p>Como buscamos predecir la variable EN creada, la cual depende del
 IMC, y a su vez, del peso y la altura, se calculan los valores de
 correlación entre el IMC y las demás variables. El mayor valor de
-correlación lo presenta lo presenta la variable Waist.Girth que será
-nuevamente utilizada como predictor inicial</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="co"># Selecciona únicamente las columnas que son numéricas o enteras</span></span>
-<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>datos_numericos <span class="ot">&lt;-</span> datos_entrenamiento <span class="sc">|&gt;</span></span>
-<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
-<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>matriz_correlacion <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_numericos, <span class="at">use =</span> <span class="st">&quot;complete.obs&quot;</span>)</span></code></pre></div>
+correlación lo presenta la variable Waist.Girth que será nuevamente
+utilizada como predictor inicial</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="co"># Selecciona únicamente las columnas que son numéricas o enteras</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>datos_numericos <span class="ot">&lt;-</span> datos_entrenamiento <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a>matriz_correlacion <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_numericos, <span class="at">use =</span> <span class="st">&quot;complete.obs&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning in cor(datos_numericos, use = &quot;complete.obs&quot;): La desviación estándar
 ## es cero</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>correlaciones_con_imc <span class="ot">&lt;-</span> matriz_correlacion[<span class="st">&quot;IMC&quot;</span>, ]</span>
-<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(correlaciones_con_imc, <span class="dv">3</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>correlaciones_con_imc <span class="ot">&lt;-</span> matriz_correlacion[<span class="st">&quot;IMC&quot;</span>, ]</span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(correlaciones_con_imc, <span class="dv">3</span>))</span></code></pre></div>
 <pre><code>##     Biacromial.diameter        Biiliac.diameter Bitrochanteric.diameter 
 ##                   0.193                   0.273                   0.519 
 ##             Chest.depth          Chest.diameter         Elbows.diameter 
@@ -3142,8 +3142,8 @@ nuevamente utilizada como predictor inicial</p>
 <h3>4)</h3>
 <p>Se construye el modelo de regresión logística para el predictor
 Waist.Girth:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>modelo_log <span class="ot">&lt;-</span> <span class="fu">glm</span>(EN <span class="sc">~</span> Waist.Girth, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>), <span class="at">data =</span> datos_entrenamiento)</span>
-<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(modelo_log), <span class="at">signif.stars =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>modelo_log <span class="ot">&lt;-</span> <span class="fu">glm</span>(EN <span class="sc">~</span> Waist.Girth, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>), <span class="at">data =</span> datos_entrenamiento)</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(modelo_log), <span class="at">signif.stars =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = EN ~ Waist.Girth, family = binomial(link = &quot;logit&quot;), 
@@ -3161,9 +3161,9 @@ Waist.Girth:</p>
 ## AIC: 74.921
 ## 
 ## Number of Fisher Scoring iterations: 6</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## ---</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">anova</span>(modelo_log, <span class="at">test =</span> <span class="st">&quot;LRT&quot;</span>), <span class="at">signif.stars =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">anova</span>(modelo_log, <span class="at">test =</span> <span class="st">&quot;LRT&quot;</span>), <span class="at">signif.stars =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <pre><code>## Analysis of Deviance Table
 ## 
 ## Model: binomial, link: logit
@@ -3184,21 +3184,21 @@ recomienda usar herramientas estándares de búsqueda de modelos para
 explorar entre las variables candidatas cuál combinación produce el
 mejor ajuste, evitando al mismo tiempo caer en problemas de
 convergencia.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="co"># Modelo mínimo (el obtenido en el paso 4) y modelo máximo</span></span>
-<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a><span class="co"># (agregando las 8 variables candidatas recordadas en el paso 2)</span></span>
-<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>nulo <span class="ot">&lt;-</span> modelo_log</span>
-<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>maxi <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>  EN <span class="sc">~</span> Waist.Girth <span class="sc">+</span> Knee.Girth <span class="sc">+</span> Bicep.Girth <span class="sc">+</span> Bitrochanteric.diameter <span class="sc">+</span></span>
-<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a>    Chest.depth <span class="sc">+</span> Chest.diameter <span class="sc">+</span> Chest.Girth <span class="sc">+</span> Calf.Maximum.Girth <span class="sc">+</span></span>
-<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a>    Elbows.diameter,</span>
-<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>), <span class="at">data =</span> datos_entrenamiento</span>
-<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a>)</span>
-<span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a></span>
-<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a><span class="co"># regresión escalonada</span></span>
-<span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a>modelo_step <span class="ot">&lt;-</span> <span class="fu">step</span>(nulo,</span>
-<span id="cb35-13"><a href="#cb35-13" tabindex="-1"></a>  <span class="at">scope =</span> <span class="fu">list</span>(<span class="at">lower =</span> nulo, <span class="at">upper =</span> maxi),</span>
-<span id="cb35-14"><a href="#cb35-14" tabindex="-1"></a>  <span class="at">direction =</span> <span class="st">&quot;both&quot;</span>, <span class="at">trace =</span> <span class="dv">1</span></span>
-<span id="cb35-15"><a href="#cb35-15" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="co"># Modelo mínimo (el obtenido en el paso 4) y modelo máximo</span></span>
+<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a><span class="co"># (agregando las 8 variables candidatas recordadas en el paso 2)</span></span>
+<span id="cb39-3"><a href="#cb39-3" tabindex="-1"></a>nulo <span class="ot">&lt;-</span> modelo_log</span>
+<span id="cb39-4"><a href="#cb39-4" tabindex="-1"></a>maxi <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb39-5"><a href="#cb39-5" tabindex="-1"></a>  EN <span class="sc">~</span> Waist.Girth <span class="sc">+</span> Knee.Girth <span class="sc">+</span> Bicep.Girth <span class="sc">+</span> Bitrochanteric.diameter <span class="sc">+</span></span>
+<span id="cb39-6"><a href="#cb39-6" tabindex="-1"></a>    Chest.depth <span class="sc">+</span> Chest.diameter <span class="sc">+</span> Chest.Girth <span class="sc">+</span> Calf.Maximum.Girth <span class="sc">+</span></span>
+<span id="cb39-7"><a href="#cb39-7" tabindex="-1"></a>    Elbows.diameter,</span>
+<span id="cb39-8"><a href="#cb39-8" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>), <span class="at">data =</span> datos_entrenamiento</span>
+<span id="cb39-9"><a href="#cb39-9" tabindex="-1"></a>)</span>
+<span id="cb39-10"><a href="#cb39-10" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" tabindex="-1"></a><span class="co"># regresión escalonada</span></span>
+<span id="cb39-12"><a href="#cb39-12" tabindex="-1"></a>modelo_step <span class="ot">&lt;-</span> <span class="fu">step</span>(nulo,</span>
+<span id="cb39-13"><a href="#cb39-13" tabindex="-1"></a>  <span class="at">scope =</span> <span class="fu">list</span>(<span class="at">lower =</span> nulo, <span class="at">upper =</span> maxi),</span>
+<span id="cb39-14"><a href="#cb39-14" tabindex="-1"></a>  <span class="at">direction =</span> <span class="st">&quot;both&quot;</span>, <span class="at">trace =</span> <span class="dv">1</span></span>
+<span id="cb39-15"><a href="#cb39-15" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Start:  AIC=74.92
 ## EN ~ Waist.Girth
 ## 
@@ -3254,10 +3254,10 @@ convergencia.</p>
 ## - Bitrochanteric.diameter  1   54.818 62.818
 ## + Chest.depth              1   50.938 62.938
 ## - Chest.Girth              1   58.343 66.343</code></pre>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Modelo obtenido con regresión escalonada:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Modelo obtenido con regresión escalonada:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Modelo obtenido con regresión escalonada:</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(modelo_step))</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(modelo_step))</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = EN ~ Waist.Girth + Chest.Girth + Bitrochanteric.diameter + 
@@ -3280,10 +3280,10 @@ convergencia.</p>
 ## AIC: 60.994
 ## 
 ## Number of Fisher Scoring iterations: 7</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Comparación RLogitS (paso 4) vs RLogitM (paso 5):</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Comparación RLogitS (paso 4) vs RLogitM (paso 5):</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Comparación RLogitS (paso 4) vs RLogitM (paso 5):</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">anova</span>(nulo, modelo_step, <span class="at">test =</span> <span class="st">&quot;LRT&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">anova</span>(nulo, modelo_step, <span class="at">test =</span> <span class="st">&quot;LRT&quot;</span>))</span></code></pre></div>
 <pre><code>## Analysis of Deviance Table
 ## 
 ## Model 1: EN ~ Waist.Girth
@@ -3305,45 +3305,46 @@ mediante regresión escalonada (paso 5), se analizarán tres aspectos
 fundamentales: la bondad de ajuste (Pseudo <span class="math inline">\(R^2\)</span>), el supuesto de no multicolinealidad
 (VIF) y la posible presencia de casos sobreinfluyentes (Distancia de
 Cook) que puedan estar distorsionando los coeficientes.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a><span class="fu">library</span>(DescTools)</span>
-<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;--- 1. EVALUACIÓN DEL NIVEL DE AJUSTE ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="fu">library</span>(car)</span></code></pre></div>
+<pre><code>## Warning: package &#39;car&#39; was built under R version 4.5.3</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a><span class="fu">library</span>(DescTools)</span></code></pre></div>
+<pre><code>## Warning: package &#39;DescTools&#39; was built under R version 4.5.3</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;--- 1. EVALUACIÓN DEL NIVEL DE AJUSTE ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## --- 1. EVALUACIÓN DEL NIVEL DE AJUSTE ---</code></pre>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="co"># Se utiliza el Pseudo R-cuadrado de McFadden como métrica de bondad de ajuste.</span></span>
-<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a><span class="co"># En regresión logística, valores entre 0.2 y 0.4 ya se consideran excelentes.</span></span>
-<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a>pseudo_r2 <span class="ot">&lt;-</span> <span class="fu">PseudoR2</span>(modelo_step, <span class="at">which =</span> <span class="st">&quot;McFadden&quot;</span>)</span>
-<span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Pseudo R-cuadrado de McFadden:&quot;</span>, <span class="fu">round</span>(pseudo_r2, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a><span class="co"># Se utiliza el Pseudo R-cuadrado de McFadden como métrica de bondad de ajuste.</span></span>
+<span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a><span class="co"># En regresión logística, valores entre 0.2 y 0.4 ya se consideran excelentes.</span></span>
+<span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a>pseudo_r2 <span class="ot">&lt;-</span> <span class="fu">PseudoR2</span>(modelo_step, <span class="at">which =</span> <span class="st">&quot;McFadden&quot;</span>)</span>
+<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Pseudo R-cuadrado de McFadden:&quot;</span>, <span class="fu">round</span>(pseudo_r2, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Pseudo R-cuadrado de McFadden: 0.632</code></pre>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- 2. CONDICIONES: MULTICOLINEALIDAD (VIF) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- 2. CONDICIONES: MULTICOLINEALIDAD (VIF) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## --- 2. CONDICIONES: MULTICOLINEALIDAD (VIF) ---</code></pre>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a><span class="co"># Se revisa el Factor de Inflación de la Varianza (VIF) para asegurar que</span></span>
-<span id="cb51-2"><a href="#cb51-2" tabindex="-1"></a><span class="co"># las variables predictoras aportan información independiente.</span></span>
-<span id="cb51-3"><a href="#cb51-3" tabindex="-1"></a><span class="co"># Si un valor supera el umbral de 5, indicaría multicolinealidad problemática.</span></span>
-<span id="cb51-4"><a href="#cb51-4" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">vif</span>(modelo_step))</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="co"># Se revisa el Factor de Inflación de la Varianza (VIF) para asegurar que</span></span>
+<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a><span class="co"># las variables predictoras aportan información independiente.</span></span>
+<span id="cb59-3"><a href="#cb59-3" tabindex="-1"></a><span class="co"># Si un valor supera el umbral de 5, indicaría multicolinealidad problemática.</span></span>
+<span id="cb59-4"><a href="#cb59-4" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">vif</span>(modelo_step))</span></code></pre></div>
 <pre><code>##             Waist.Girth             Chest.Girth Bitrochanteric.diameter 
 ##                1.251149                1.302027                1.084001 
 ##              Knee.Girth 
 ##                1.042610</code></pre>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- 3. CASOS SOBREINFLUYENTES (Distancia de Cook) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- 3. CASOS SOBREINFLUYENTES (Distancia de Cook) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## --- 3. CASOS SOBREINFLUYENTES (Distancia de Cook) ---</code></pre>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a><span class="co"># Se calcula la distancia de Cook para identificar observaciones con valores</span></span>
-<span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a><span class="co"># atípicos que ejerzan una influencia desproporcionada en el modelo.</span></span>
-<span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a>distancia_cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(modelo_step)</span>
-<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a></span>
-<span id="cb55-5"><a href="#cb55-5" tabindex="-1"></a><span class="co"># Se define el umbral estándar (4 / n) para catalogar un caso como altamente influyente</span></span>
-<span id="cb55-6"><a href="#cb55-6" tabindex="-1"></a>umbral_cook <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">nrow</span>(datos_entrenamiento)</span>
-<span id="cb55-7"><a href="#cb55-7" tabindex="-1"></a>casos_influyentes <span class="ot">&lt;-</span> <span class="fu">which</span>(distancia_cook <span class="sc">&gt;</span> umbral_cook)</span>
-<span id="cb55-8"><a href="#cb55-8" tabindex="-1"></a></span>
-<span id="cb55-9"><a href="#cb55-9" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Umbral de Distancia de Cook:&quot;</span>, <span class="fu">round</span>(umbral_cook, <span class="dv">4</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a><span class="co"># Se calcula la distancia de Cook para identificar observaciones con valores</span></span>
+<span id="cb63-2"><a href="#cb63-2" tabindex="-1"></a><span class="co"># atípicos que ejerzan una influencia desproporcionada en el modelo.</span></span>
+<span id="cb63-3"><a href="#cb63-3" tabindex="-1"></a>distancia_cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(modelo_step)</span>
+<span id="cb63-4"><a href="#cb63-4" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="#cb63-5" tabindex="-1"></a><span class="co"># Se define el umbral estándar (4 / n) para catalogar un caso como altamente influyente</span></span>
+<span id="cb63-6"><a href="#cb63-6" tabindex="-1"></a>umbral_cook <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">/</span> <span class="fu">nrow</span>(datos_entrenamiento)</span>
+<span id="cb63-7"><a href="#cb63-7" tabindex="-1"></a>casos_influyentes <span class="ot">&lt;-</span> <span class="fu">which</span>(distancia_cook <span class="sc">&gt;</span> umbral_cook)</span>
+<span id="cb63-8"><a href="#cb63-8" tabindex="-1"></a></span>
+<span id="cb63-9"><a href="#cb63-9" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Umbral de Distancia de Cook:&quot;</span>, <span class="fu">round</span>(umbral_cook, <span class="dv">4</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Umbral de Distancia de Cook: 0.04</code></pre>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Cantidad de casos que superan el umbral:&quot;</span>, <span class="fu">length</span>(casos_influyentes), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Cantidad de casos que superan el umbral:&quot;</span>, <span class="fu">length</span>(casos_influyentes), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Cantidad de casos que superan el umbral: 9</code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(casos_influyentes) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a>  <span class="fu">print</span>(casos_influyentes)</span>
-<span id="cb59-3"><a href="#cb59-3" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(casos_influyentes) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb67-2"><a href="#cb67-2" tabindex="-1"></a>  <span class="fu">print</span>(casos_influyentes)</span>
+<span id="cb67-3"><a href="#cb67-3" tabindex="-1"></a>}</span></code></pre></div>
 <pre><code>##  9 29 36 37 45 53 82 87 98 
 ##  9 29 36 37 45 53 82 87 98</code></pre>
 <p>Como se observa en los resultados anteriores, el ajuste del modelo es
@@ -3355,21 +3356,21 @@ influencia.</p>
 generalizable (y no esté sesgado por estos valores atípicos), se procede
 a depurar el conjunto de entrenamiento eliminando estos casos y se
 ajusta el modelo definitivo.</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- ARREGLO DEL MODELO (DEPURACIÓN) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- ARREGLO DEL MODELO (DEPURACIÓN) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## --- ARREGLO DEL MODELO (DEPURACIÓN) ---</code></pre>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a><span class="co"># 1. Se crea un nuevo set de datos excluyendo las filas problemáticas</span></span>
-<span id="cb63-2"><a href="#cb63-2" tabindex="-1"></a>datos_entrenamiento_limpios <span class="ot">&lt;-</span> datos_entrenamiento[<span class="sc">-</span>casos_influyentes, ]</span>
-<span id="cb63-3"><a href="#cb63-3" tabindex="-1"></a></span>
-<span id="cb63-4"><a href="#cb63-4" tabindex="-1"></a><span class="co"># 2. Se actualiza el modelo escalonado utilizando únicamente los datos limpios</span></span>
-<span id="cb63-5"><a href="#cb63-5" tabindex="-1"></a>modelo_final <span class="ot">&lt;-</span> <span class="fu">update</span>(modelo_step, <span class="at">data =</span> datos_entrenamiento_limpios)</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" tabindex="-1"></a><span class="co"># 1. Se crea un nuevo set de datos excluyendo las filas problemáticas</span></span>
+<span id="cb71-2"><a href="#cb71-2" tabindex="-1"></a>datos_entrenamiento_limpios <span class="ot">&lt;-</span> datos_entrenamiento[<span class="sc">-</span>casos_influyentes, ]</span>
+<span id="cb71-3"><a href="#cb71-3" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="#cb71-4" tabindex="-1"></a><span class="co"># 2. Se actualiza el modelo escalonado utilizando únicamente los datos limpios</span></span>
+<span id="cb71-5"><a href="#cb71-5" tabindex="-1"></a>modelo_final <span class="ot">&lt;-</span> <span class="fu">update</span>(modelo_step, <span class="at">data =</span> datos_entrenamiento_limpios)</span></code></pre></div>
 <pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="co"># 3. Se verifica el impacto de la limpieza en la bondad de ajuste</span></span>
-<span id="cb65-2"><a href="#cb65-2" tabindex="-1"></a>pseudo_r2_final <span class="ot">&lt;-</span> <span class="fu">PseudoR2</span>(modelo_final, <span class="at">which =</span> <span class="st">&quot;McFadden&quot;</span>)</span>
-<span id="cb65-3"><a href="#cb65-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Nuevo Pseudo R-cuadrado sin outliers:&quot;</span>, <span class="fu">round</span>(pseudo_r2_final, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" tabindex="-1"></a><span class="co"># 3. Se verifica el impacto de la limpieza en la bondad de ajuste</span></span>
+<span id="cb73-2"><a href="#cb73-2" tabindex="-1"></a>pseudo_r2_final <span class="ot">&lt;-</span> <span class="fu">PseudoR2</span>(modelo_final, <span class="at">which =</span> <span class="st">&quot;McFadden&quot;</span>)</span>
+<span id="cb73-3"><a href="#cb73-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Nuevo Pseudo R-cuadrado sin outliers:&quot;</span>, <span class="fu">round</span>(pseudo_r2_final, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Nuevo Pseudo R-cuadrado sin outliers: 0.862</code></pre>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" tabindex="-1"></a><span class="co"># Se expone el resumen del modelo definitivo</span></span>
-<span id="cb67-2"><a href="#cb67-2" tabindex="-1"></a><span class="fu">summary</span>(modelo_final)</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" tabindex="-1"></a><span class="co"># Se expone el resumen del modelo definitivo</span></span>
+<span id="cb75-2"><a href="#cb75-2" tabindex="-1"></a><span class="fu">summary</span>(modelo_final)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = EN ~ Waist.Girth + Chest.Girth + Bitrochanteric.diameter + 
@@ -3395,12 +3396,148 @@ ajusta el modelo definitivo.</p>
 <p>Al eliminar los casos influyentes, podemos notar cómo el Pseudo
 R-cuadrado experimenta una mejora o se estabiliza, indicando que hemos
 obtenido un modelo final robusto, confiable y teóricamente apto para
-realizar predicciones sobre datos no vistos. ### 7)</p>
+realizar predicciones sobre datos no vistos.</p>
+</div>
+<div id="section-9" class="section level3">
+<h3>7)</h3>
+<p>Se pide evaluar el poder predictivo de los modelos, a partir de los
+datos de prueba que fueron obtenidos en el paso 1 del ejercicio. Para
+ello, se obtienen las probabilidades que predicen los modelos obtenidos
+usando la función predict(). Se arma la matriz de confusión que permite
+clasificar los resultados obtenidos, para luego calcular sensibilidad y
+especificidad. Al final, se grafica la curva ROC teniendo como
+referencia el modelo con AUC = 0.5 (curva diagonal).</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" tabindex="-1"></a><span class="co"># Obtener las probabilidades predichas para el conjunto de prueba</span></span>
+<span id="cb77-2"><a href="#cb77-2" tabindex="-1"></a><span class="co"># Se usa type = &quot;response&quot; para obtener la probabilidad P(y = 1 | x)</span></span>
+<span id="cb77-3"><a href="#cb77-3" tabindex="-1"></a>probabilidades_prueba <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_final, <span class="at">newdata =</span> datos_prueba, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
+<span id="cb77-4"><a href="#cb77-4" tabindex="-1"></a></span>
+<span id="cb77-5"><a href="#cb77-5" tabindex="-1"></a><span class="co"># Clasificación binaria usando el umbral tradicional de 0.5</span></span>
+<span id="cb77-6"><a href="#cb77-6" tabindex="-1"></a>umbral <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb77-7"><a href="#cb77-7" tabindex="-1"></a>predicciones_clase <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(probabilidades_prueba <span class="sc">&gt;=</span> umbral, <span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>)</span>
+<span id="cb77-8"><a href="#cb77-8" tabindex="-1"></a></span>
+<span id="cb77-9"><a href="#cb77-9" tabindex="-1"></a><span class="co"># Convertir las predicciones a factor asegurando los mismos niveles</span></span>
+<span id="cb77-10"><a href="#cb77-10" tabindex="-1"></a>predicciones_clase <span class="ot">&lt;-</span> <span class="fu">factor</span>(predicciones_clase, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no sobrepeso&quot;</span>, <span class="st">&quot;sobrepeso&quot;</span>))</span>
+<span id="cb77-11"><a href="#cb77-11" tabindex="-1"></a></span>
+<span id="cb77-12"><a href="#cb77-12" tabindex="-1"></a><span class="co"># Construir la matriz de confusión (Tabla de Contingencia)</span></span>
+<span id="cb77-13"><a href="#cb77-13" tabindex="-1"></a>matriz_confusion <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">Prediccion =</span> predicciones_clase, <span class="at">Real =</span> datos_prueba<span class="sc">$</span>EN)</span>
+<span id="cb77-14"><a href="#cb77-14" tabindex="-1"></a></span>
+<span id="cb77-15"><a href="#cb77-15" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;--- MATRIZ DE CONFUSIÓN ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## --- MATRIZ DE CONFUSIÓN ---</code></pre>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" tabindex="-1"></a><span class="fu">print</span>(matriz_confusion)</span></code></pre></div>
+<pre><code>##               Real
+## Prediccion     no sobrepeso sobrepeso
+##   no sobrepeso           24         5
+##   sobrepeso               1        20</code></pre>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" tabindex="-1"></a><span class="co"># Extraer los valores de la matriz para calcular las métricas</span></span>
+<span id="cb81-2"><a href="#cb81-2" tabindex="-1"></a>VN <span class="ot">&lt;-</span> matriz_confusion[<span class="st">&quot;no sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>]</span>
+<span id="cb81-3"><a href="#cb81-3" tabindex="-1"></a>FN <span class="ot">&lt;-</span> matriz_confusion[<span class="st">&quot;no sobrepeso&quot;</span>, <span class="st">&quot;sobrepeso&quot;</span>]</span>
+<span id="cb81-4"><a href="#cb81-4" tabindex="-1"></a>FP <span class="ot">&lt;-</span> matriz_confusion[<span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;no sobrepeso&quot;</span>]</span>
+<span id="cb81-5"><a href="#cb81-5" tabindex="-1"></a>VP <span class="ot">&lt;-</span> matriz_confusion[<span class="st">&quot;sobrepeso&quot;</span>, <span class="st">&quot;sobrepeso&quot;</span>]</span>
+<span id="cb81-6"><a href="#cb81-6" tabindex="-1"></a></span>
+<span id="cb81-7"><a href="#cb81-7" tabindex="-1"></a><span class="co"># Calcular exactitud, sensibilidad y especificidad</span></span>
+<span id="cb81-8"><a href="#cb81-8" tabindex="-1"></a>exactitud <span class="ot">&lt;-</span> (VP <span class="sc">+</span> VN) <span class="sc">/</span> <span class="fu">nrow</span>(datos_prueba)</span>
+<span id="cb81-9"><a href="#cb81-9" tabindex="-1"></a>sensibilidad <span class="ot">&lt;-</span> VP <span class="sc">/</span> (VP <span class="sc">+</span> FN)</span>
+<span id="cb81-10"><a href="#cb81-10" tabindex="-1"></a>especificidad <span class="ot">&lt;-</span> VN <span class="sc">/</span> (FP <span class="sc">+</span> VN)</span>
+<span id="cb81-11"><a href="#cb81-11" tabindex="-1"></a></span>
+<span id="cb81-12"><a href="#cb81-12" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- MÉTRICAS DE PODER PREDICTIVO (CONJUNTO DE PRUEBA) ---</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## --- MÉTRICAS DE PODER PREDICTIVO (CONJUNTO DE PRUEBA) ---</code></pre>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;Exactitud:     %.3f</span><span class="sc">\n</span><span class="st">&quot;</span>, exactitud))</span></code></pre></div>
+<pre><code>## Exactitud:     0.880</code></pre>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;Sensibilidad:  %.3f</span><span class="sc">\n</span><span class="st">&quot;</span>, sensibilidad))</span></code></pre></div>
+<pre><code>## Sensibilidad:  0.800</code></pre>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;Especificidad: %.3f</span><span class="sc">\n</span><span class="st">&quot;</span>, especificidad))</span></code></pre></div>
+<pre><code>## Especificidad: 0.960</code></pre>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" tabindex="-1"></a><span class="co"># Construcción y gráfico de la Curva ROC (usando R base)</span></span>
+<span id="cb89-2"><a href="#cb89-2" tabindex="-1"></a>orden <span class="ot">&lt;-</span> <span class="fu">order</span>(probabilidades_prueba, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb89-3"><a href="#cb89-3" tabindex="-1"></a>obs_ordenadas <span class="ot">&lt;-</span> datos_prueba<span class="sc">$</span>EN[orden] <span class="sc">==</span> <span class="st">&quot;sobrepeso&quot;</span></span>
+<span id="cb89-4"><a href="#cb89-4" tabindex="-1"></a></span>
+<span id="cb89-5"><a href="#cb89-5" tabindex="-1"></a>n_pos <span class="ot">&lt;-</span> <span class="fu">sum</span>(obs_ordenadas)</span>
+<span id="cb89-6"><a href="#cb89-6" tabindex="-1"></a>n_neg <span class="ot">&lt;-</span> <span class="fu">length</span>(obs_ordenadas) <span class="sc">-</span> n_pos</span>
+<span id="cb89-7"><a href="#cb89-7" tabindex="-1"></a></span>
+<span id="cb89-8"><a href="#cb89-8" tabindex="-1"></a>tpr <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(obs_ordenadas) <span class="sc">/</span> n_pos   <span class="co"># Sensibilidad (Verdaderos Positivos)</span></span>
+<span id="cb89-9"><a href="#cb89-9" tabindex="-1"></a>fpr <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(<span class="sc">!</span>obs_ordenadas) <span class="sc">/</span> n_neg <span class="co"># 1 - Especificidad (Falsos Positivos)</span></span>
+<span id="cb89-10"><a href="#cb89-10" tabindex="-1"></a></span>
+<span id="cb89-11"><a href="#cb89-11" tabindex="-1"></a>tpr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, tpr)</span>
+<span id="cb89-12"><a href="#cb89-12" tabindex="-1"></a>fpr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, fpr)</span>
+<span id="cb89-13"><a href="#cb89-13" tabindex="-1"></a></span>
+<span id="cb89-14"><a href="#cb89-14" tabindex="-1"></a><span class="co"># Generar el gráfico ROC</span></span>
+<span id="cb89-15"><a href="#cb89-15" tabindex="-1"></a><span class="fu">plot</span>(fpr, tpr, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb89-16"><a href="#cb89-16" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Curva ROC - Modelo de Regresión Logística&quot;</span>,</span>
+<span id="cb89-17"><a href="#cb89-17" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Especificidad (Tasa de Falsos Positivos)&quot;</span>,</span>
+<span id="cb89-18"><a href="#cb89-18" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Sensibilidad (Tasa de Verdaderos Positivos)&quot;</span>)</span>
+<span id="cb89-19"><a href="#cb89-19" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&quot;gray&quot;</span>) <span class="co"># Línea diagonal de referencia (AUC = 0.5)</span></span>
+<span id="cb89-20"><a href="#cb89-20" tabindex="-1"></a></span>
+<span id="cb89-21"><a href="#cb89-21" tabindex="-1"></a><span class="co"># Cálculo exacto del AUC mediante aproximación trapezoidal</span></span>
+<span id="cb89-22"><a href="#cb89-22" tabindex="-1"></a>ancho <span class="ot">&lt;-</span> <span class="fu">diff</span>(fpr)</span>
+<span id="cb89-23"><a href="#cb89-23" tabindex="-1"></a>altura <span class="ot">&lt;-</span> (tpr[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">+</span> tpr[<span class="sc">-</span><span class="fu">length</span>(tpr)]) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb89-24"><a href="#cb89-24" tabindex="-1"></a>auc_valor <span class="ot">&lt;-</span> <span class="fu">sum</span>(ancho <span class="sc">*</span> altura)</span>
+<span id="cb89-25"><a href="#cb89-25" tabindex="-1"></a></span>
+<span id="cb89-26"><a href="#cb89-26" tabindex="-1"></a><span class="co"># Mostrar el resultado del AUC en consola y sobre el gráfico</span></span>
+<span id="cb89-27"><a href="#cb89-27" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Área Bajo la Curva (AUC): %.3f</span><span class="sc">\n</span><span class="st">&quot;</span>, auc_valor))</span></code></pre></div>
+<pre><code>## 
+## Área Bajo la Curva (AUC): 0.971</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" tabindex="-1"></a><span class="fu">text</span>(<span class="fl">0.6</span>, <span class="fl">0.2</span>, <span class="at">labels =</span> <span class="fu">paste</span>(<span class="st">&quot;AUC =&quot;</span>, <span class="fu">round</span>(auc_valor, <span class="dv">3</span>)), <span class="at">col =</span> <span class="st">&quot;darkblue&quot;</span>, <span class="at">cex =</span> <span class="fl">1.2</span>)</span></code></pre></div>
+<p><img role="img" aria-label src="data:image/png;base64,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" alt width="672" style="display: block; margin: auto;" /></p>
+<p>Como observación, dado que los datos de prueba tienen relativamente
+pocas observaciones (50), la curva no es suave, si no que más bien,
+escalonada con “saltos”. De todas maneras, es posible calcular el área
+bajo la curva (AUC) para utilizarlo como indicador de la calidad del
+clasificador.</p>
 </div>
 </div>
 </div>
 <div id="conclusiones" class="section level1">
 <h1>Conclusiones</h1>
+<p>Durante el desarrollo del presente trabajo, se ha trabajado con un
+conjunto de 507 datos de medidas de circunferencia corporal y diámetro
+esquelético, así como edad, peso, estatura y sexo. Se ha logrado agregar
+dos nuevas columnas, una para IMC que se calcula a partir del peso y la
+estatura, y otra para EN que es una variable categórica con dos posibles
+valores (“sobrepeso”, “no sobrepeso”), para la cual se creó un modelo de
+regresión logística que permitiría predecir la probabilidad de que
+ocurra el evento “sobrepeso” o “no sobrepeso”.</p>
+<p>Luego, se realizó el proceso de toma de muestras generando dos
+conjuntos (únicamente de mujeres), el primero usado para la
+construcción/entrenamiento del modelo y el segundo utilizado para ser
+usado en la predicción de nuevos valores.</p>
+<p>Se selecciona la variable Waist.Girth (circunferencia de la cintura)
+para utilizarla en el modelo base obteniendo un estimador de 0.44018, un
+z value de 4.744 y un valor p de 2.10e-06, mostrando que Waist.Girth es
+un predictor significativo para estimar la variable EN. También se
+aplica la función anova() que entrega un valor p menor a 2.2e-16
+indicando el modelo de un predictor es significativamente mejor que el
+modelo nulo (sin predictores).</p>
+<p>Para el paso 5 se utiliza regresión escalonada con el criterio de
+menor AIC, para hallar un modelo múltiple. Se obtienen los valores de
+los coeficientes para cada predictor resultando todos positivos, lo que
+indica que a mayor valor de circunferencia o diámetro de las variables,
+mayor será la probabilidad de que una persona pertenezca a la categoría
+“sobrepeso”. Las pruebas de Wald resultan no significativas para un
+valor alpha igual a 0.05, excepto para Chest.Girth (circunferencia del
+pecho), por lo que los resultados siguientes se deberán tratar con
+cautela. A pesar de ello, se ha logrado disminuir el valor de AIC con el
+nuevo modelo y su comparación frente al modelo nulo resulta
+significativa.</p>
+<p>Se hizo una prueba de Pseudo R-cuadrado de McFadden obteniendo 0.632,
+lo cual es un buen indicador para la bondad de ajuste del conjunto de
+entrenamiento. Para la multicolinealidad se obtuvo valores VIF entre 1 y
+1.5, que tomando un umbral de 5, indica que el modelo cumple con el
+supuesto de no multicolinealidad. Seguido a ello, se analizan casos
+sobreinfluyentes mediante la distancia de Cook resultando en 9
+observaciones que superan el umbral de 4/n, lo que puede generar
+problemas sobre la estimación de los coeficientes del modelo. Se procede
+a la eliminación de outliers, haciendo nuevamente las pruebas. Pseudo
+R-cuadrado de McFadden aumenta a 0.862 y el AIC disminuye de 60.994
+hasta 27.439, obteniendo un modelo con un ajuste superior.</p>
+<p>Por último, al evaluar el poder predictivo de los modelos sobre los
+datos de prueba (muestra n=50) se obtuvo una exactitud del 88% (tasa de
+acierto global), una sensibilidad del 80% (el modelo fue capaz de
+identificar correctamente a 20 de las 25 personas que realmente
+pertenecían a la categoría de “sobrepeso”) y una especificidad del 96%
+(hubo un único falso positivo). El AUC obtenido es de 0.971, por lo que
+se concluye que el modelo final presenta una gran capacidad de
+clasificación de las observaciones.</p>
 </div>
 <div id="referencias" class="section level1">
 <h1>Referencias</h1>
