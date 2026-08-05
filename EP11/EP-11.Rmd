@@ -47,7 +47,45 @@ library(dplyr)
 
 # Cargar los datos
 datos <- read.csv2("EP09 Datos.csv")
+
+# Crear las variables IMC y EN
+datos <- datos |>
+  mutate(IMC = Weight / (Height / 100)^2) |>
+  mutate(EN = ifelse(IMC >= 23.2, "sobrepeso", "no sobrepeso")) |>
+  mutate(EN = factor(EN, levels = c("no sobrepeso", "sobrepeso")))
+
+# Verificamos los resultados mostrando las primeras filas
+head(datos |> select(Weight, Height, IMC, EN))
+
+# Vemos un resumen de la nueva variable dicotómica
+cat("\nDistribución del Estado Nutricional (EN):\n")
+summary(datos$EN)
+
+# Semilla para asegurar reproducibilidad
+set.seed(21097)
 ```
+
+### 2) 
+
+```{r}
+# 2. Tomar las muestras indicando que provienen de 'datos'
+muestra_sobrepeso <- datos |>
+  filter(EN == "sobrepeso") |>
+  slice_sample(n = 50)
+
+muestra_no_sobrepeso <- datos |>
+  filter(EN == "no sobrepeso") |>
+  slice_sample(n = 50)
+
+# 3. Unirlas en un solo data.frame
+muestra_total <- bind_rows(muestra_sobrepeso, muestra_no_sobrepeso)
+```
+
+
+### 3) 
+### 4) 
+### 5) 
+### 6) 
 
 # Referencias
 
