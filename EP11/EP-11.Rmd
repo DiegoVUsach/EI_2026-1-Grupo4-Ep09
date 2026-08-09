@@ -41,7 +41,7 @@ con la adición de las variables IMC y EN consideradas en el ejercicio práctico
 ## Primera parte
 
 ### 1) 
-
+Se fijó la semilla de reproducibilidad y se construyó una muestra balanceada de 100 personas (50 "sobrepeso", 50 "no sobrepeso") a partir de los datos indicados.
 ```{r}
 library(dplyr)
 
@@ -66,7 +66,7 @@ set.seed(21097)
 ```
 
 ### 2) 
-
+Se construyeron dos modelos de RLM: uno para el Peso, seleccionando predictores con búsqueda exhaustiva (leaps) y evaluando con bootstrapping; y otro para el IMC, seleccionando predictores con RFE (caret) y validación cruzada repetida, ambos para evitar el sobreajuste.
 ```{r}
 # 2. Tomar las muestras indicando que provienen de 'datos'
 muestra_sobrepeso <- datos |>
@@ -82,8 +82,100 @@ muestra_total <- bind_rows(muestra_sobrepeso, muestra_no_sobrepeso)
 ```
 
 
-### 3) 
+### 3)
+Para estimar el Peso se buscó de forma exhaustiva con leaps el subconjunto de 2 a 8 predictores con menor BIC, y se evaluó el modelo resultante con bootstrapping para obtener una estimación más robusta de su capacidad predictiva.
+```{r}
+library(leaps)
+library(caret)
+
+# Conjunto de predictores candidatos para el modelo de Peso (Weight):
+# se excluyen IMC y EN, tal como exige el enunciado
+datos_weight <- muestra_total |>
+  select(-IMC, -EN)
+
+# Búsqueda exhaustiva (leaps)
+set.seed(21097)
+busqueda_peso <- regsubsets(Weight ~ ., data = datos_weight,
+                             nbest = 1, nvmax = 8,
+                             method = "exhaustive")
+
+resumen_busqueda <- summary(busqueda_peso)
+
+cat("BIC según cantidad de predictores (1 a 8):\n")
+print(data.frame(n_predictores = 1:length(resumen_busqueda$bic),
+                  BIC = resumen_busqueda$bic))
+
+# Se escoge, entre los modelos de 2 a 8 predictores, el de menor BIC
+bic_validos  <- resumen_busqueda$bic[2:8]
+mejor_tamano <- which.min(bic_validos) + 1  
+
+cat("\nCantidad de predictores seleccionada:", mejor_tamano, "\n")
+
+coefs_mejor_modelo <- coef(busqueda_peso, id = mejor_tamano)
+predictores_weight <- names(coefs_mejor_modelo)[-1] 
+
+cat("\nPredictores seleccionados para estimar el Peso:\n")
+print(predictores_weight)
+
+# Modelo de RLM final, evaluado con bootstrapping (caret)
+formula_weight <- as.formula(paste("Weight ~", paste(predictores_weight, collapse = " + ")))
+
+set.seed(21097)
+control_boot <- trainControl(method = "boot", number = 999)
+
+modelo_weight_boot <- train(formula_weight, data = datos_weight,
+                             method = "lm",
+                             trControl = control_boot)
+
+cat("\nModelo de RLM para Peso, evaluado con bootstrapping (999 repeticiones):\n")
+print(modelo_weight_boot)
+print(summary(modelo_weight_boot$finalModel)) 
+```
 ### 4) 
+Para predecir el IMC se usó Recursive Feature Elimination (RFE) de caret, buscando entre 10 y 20 predictores (sin Weight, Height ni EN) que maximizaran el R², con validación cruzada de 5 pliegues y 5 repeticiones para evitar el sobreajuste.
+```{r}
+library(caret)
+
+# Predictores candidatos: se excluyen Weight, Height y EN (Weight/Height
+# determinan directamente el IMC, y EN se deriva del IMC)
+predictores_imc <- muestra_total |>
+  select(-Weight, -Height, -EN, -IMC)
+
+respuesta_imc <- muestra_total$IMC
+
+# Control de RFE: 5 repeticiones de validación cruzada de 5 pliegues
+set.seed(21097)
+control_rfe_imc <- rfeControl(
+  functions = lmFuncs,
+  method    = "repeatedcv",
+  number    = 5,
+  repeats   = 5,
+  verbose   = FALSE
+)
+
+# Búsqueda RFE entre 10 y 20 predictores, maximizando R2
+modelo_rfe_imc <- rfe(
+  x          = predictores_imc,
+  y          = respuesta_imc,
+  sizes      = 10:20,
+  rfeControl = control_rfe_imc,
+  metric     = "Rsquared"
+)
+
+cat("Resultado de la búsqueda RFE para predecir IMC:\n")
+print(modelo_rfe_imc)
+
+predictores_seleccionados_imc <- predictors(modelo_rfe_imc)
+cat("\nPredictores seleccionados (", length(predictores_seleccionados_imc),
+    " en total):\n", sep = "")
+print(predictores_seleccionados_imc)
+
+modelo_imc_final <- modelo_rfe_imc$fit
+cat("\nModelo de RLM final para IMC:\n")
+print(summary(modelo_imc_final))
+
+plot(modelo_rfe_imc, type = c("g", "o"))
+```
 ### 5) 
 ### 6) 
 
