@@ -177,7 +177,166 @@ print(summary(modelo_imc_final))
 plot(modelo_rfe_imc, type = c("g", "o"))
 ```
 ### 5) 
+Para predecir el estado nutricional (EN) se usó RFE de caret con regresión logística, buscando entre 2 y 6 predictores (sin Weight, Height ni IMC) que maximizaran la curva ROC, con validación cruzada dejando uno fuera (LOOCV) para evitar el sobreajuste.
+```{r}
+library(caret)
+library(pROC)
+
+# Preparar datos: excluir Weight, Height e IMC como indica el enunciado
+predictores_en <- muestra_total |>
+  select(-Weight, -Height, -IMC, -EN)
+
+respuesta_en <- muestra_total$EN
+
+# Los niveles del factor deben ser nombres válidos en R para que
+# twoClassSummary de caret funcione correctamente
+levels(respuesta_en) <- make.names(levels(respuesta_en))
+
+# Configurar funciones de regresión logística para optimizar ROC
+lr_funcs <- lrFuncs
+lr_funcs$summary <- twoClassSummary
+
+# Control RFE con validación cruzada dejando uno fuera (LOOCV)
+set.seed(21097)
+control_rfe_en <- rfeControl(
+  functions = lr_funcs,
+  method    = "LOOCV",
+  verbose   = FALSE
+)
+
+# Ejecutar RFE buscando entre 2 y 6 predictores, maximizando ROC
+modelo_rfe_en <- rfe(
+  x          = predictores_en,
+  y          = respuesta_en,
+  sizes      = 2:6,
+  rfeControl = control_rfe_en,
+  metric     = "ROC"
+)
+
+cat("Resultado de la búsqueda RFE para predecir EN:\n")
+print(modelo_rfe_en)
+
+predictores_seleccionados_en <- predictors(modelo_rfe_en)
+cat("\nPredictores seleccionados (", length(predictores_seleccionados_en),
+    " en total):\n", sep = "")
+print(predictores_seleccionados_en)
+
+cat("\nModelo de regresión logística final para EN:\n")
+print(summary(modelo_rfe_en$fit))
+
+# Gráfico del rendimiento ROC por número de predictores
+plot(modelo_rfe_en, type = c("g", "o"))
+```
 ### 6) 
+Para evaluar la confiabilidad y el poder predictivo de los tres modelos construidos, se examinan las métricas de validación obtenidas con las técnicas de remuestreo empleadas, se verifican las condiciones de los modelos de regresión lineal múltiple y se analiza la curva ROC del modelo logístico.
+
+#### Resumen de métricas de validación
+```{r}
+library(car)
+
+# --- Modelo de Peso (Pregunta 3) ---
+metricas_peso <- modelo_weight_boot$results
+cat("--- Modelo de Peso (Bootstrapping, 999 repeticiones) ---\n")
+cat(sprintf("  R²   = %.4f\n", metricas_peso$Rsquared))
+cat(sprintf("  RMSE = %.4f kg\n", metricas_peso$RMSE))
+cat(sprintf("  MAE  = %.4f kg\n", metricas_peso$MAE))
+
+# --- Modelo de IMC (Pregunta 4) ---
+mejor_imc <- modelo_rfe_imc$results[
+  modelo_rfe_imc$results$Variables == modelo_rfe_imc$bestSubset, ]
+cat("\n--- Modelo de IMC (RFE, 5x5 Validación Cruzada) ---\n")
+cat(sprintf("  R²   = %.4f\n", mejor_imc$Rsquared))
+cat(sprintf("  RMSE = %.4f kg/m²\n", mejor_imc$RMSE))
+cat(sprintf("  MAE  = %.4f kg/m²\n", mejor_imc$MAE))
+cat(sprintf("  Predictores seleccionados: %d\n", mejor_imc$Variables))
+
+# --- Modelo de EN (Pregunta 5) ---
+mejor_en <- modelo_rfe_en$results[
+  modelo_rfe_en$results$Variables == modelo_rfe_en$bestSubset, ]
+cat("\n--- Modelo de EN (RFE, LOOCV) ---\n")
+cat(sprintf("  AUC-ROC       = %.4f\n", mejor_en$ROC))
+cat(sprintf("  Sensibilidad  = %.4f\n", mejor_en$Sens))
+cat(sprintf("  Especificidad = %.4f\n", mejor_en$Spec))
+cat(sprintf("  Predictores seleccionados: %d\n", mejor_en$Variables))
+```
+
+#### Diagnósticos del modelo de Peso (Pregunta 3)
+```{r fig.height=6}
+modelo_peso_final <- modelo_weight_boot$finalModel
+
+# Normalidad de residuos
+cat("Prueba de Shapiro-Wilk para normalidad de residuos:\n")
+sw_peso <- shapiro.test(residuals(modelo_peso_final))
+print(sw_peso)
+
+# Multicolinealidad
+cat("\nFactores de inflación de varianza (VIF):\n")
+vif_peso <- vif(modelo_peso_final)
+print(vif_peso)
+cat("\nPredictores con VIF > 5:", sum(vif_peso > 5), 
+    "de", length(vif_peso), "\n")
+
+# Gráficos diagnósticos
+par(mfrow = c(2, 2))
+plot(modelo_peso_final)
+par(mfrow = c(1, 1))
+```
+
+#### Diagnósticos del modelo de IMC (Pregunta 4)
+```{r fig.height=6}
+# Normalidad de residuos
+cat("Prueba de Shapiro-Wilk para normalidad de residuos:\n")
+sw_imc <- shapiro.test(residuals(modelo_imc_final))
+print(sw_imc)
+
+# Multicolinealidad
+cat("\nFactores de inflación de varianza (VIF):\n")
+vif_imc <- vif(modelo_imc_final)
+vif_ordenado <- sort(vif_imc, decreasing = TRUE)
+cat("Top 5 VIF más altos:\n")
+print(head(vif_ordenado, 5))
+cat("\nPredictores con VIF > 5:", sum(vif_imc > 5), 
+    "de", length(vif_imc), "\n")
+
+# Gráficos diagnósticos
+par(mfrow = c(2, 2))
+plot(modelo_imc_final)
+par(mfrow = c(1, 1))
+```
+
+#### Diagnósticos del modelo de EN (Pregunta 5)
+```{r}
+# Curva ROC del modelo final sobre datos de entrenamiento
+modelo_en_final <- modelo_rfe_en$fit
+probs_en <- predict(modelo_en_final, type = "response")
+roc_en <- roc(respuesta_en, probs_en, quiet = TRUE)
+
+cat(sprintf("AUC del modelo final (resustitución): %.4f\n", auc(roc_en)))
+
+# Gráfico de la curva ROC
+plot(roc_en,
+     main = "Curva ROC - Modelo de Estado Nutricional (EN)",
+     col = "blue", lwd = 2, print.auc = TRUE, legacy.axes = TRUE)
+
+# Matriz de confusión
+pred_clase <- ifelse(probs_en > 0.5,
+                     levels(respuesta_en)[2],
+                     levels(respuesta_en)[1])
+pred_clase <- factor(pred_clase, levels = levels(respuesta_en))
+cat("\nMatriz de confusión (punto de corte = 0.5):\n")
+mc_en <- confusionMatrix(pred_clase, respuesta_en)
+print(mc_en)
+```
+
+#### Conclusiones
+
+**Modelo de Peso (Pregunta 3):** El modelo de regresión lineal múltiple para estimar el peso, evaluado con bootstrapping (999 repeticiones), presenta un R² de `r round(metricas_peso$Rsquared, 4)`, lo que indica que explica aproximadamente el `r round(metricas_peso$Rsquared * 100, 1)`% de la variabilidad del peso corporal. El RMSE de `r round(metricas_peso$RMSE, 2)` kg representa el error promedio de predicción. Respecto a las condiciones del modelo, la prueba de Shapiro-Wilk `r ifelse(sw_peso$p.value > 0.05, paste0("no rechaza la normalidad de los residuos (p = ", format.pval(sw_peso$p.value, digits = 3), "), cumpliendo este supuesto."), paste0("sugiere desviaciones de la normalidad en los residuos (p = ", format.pval(sw_peso$p.value, digits = 3), "), lo que debe tenerse en cuenta al interpretar los intervalos de confianza."))` En cuanto a la multicolinealidad, `r ifelse(sum(vif_peso > 5) == 0, "ningún predictor supera el umbral VIF > 5, lo que indica ausencia de multicolinealidad problemática.", paste0(sum(vif_peso > 5), " predictor(es) presenta(n) VIF > 5, lo que sugiere cierto grado de multicolinealidad que podría afectar la estabilidad de los coeficientes individuales, aunque no necesariamente la capacidad predictiva global del modelo."))` En conjunto, dado que el bootstrapping provee una estimación robusta y honesta del rendimiento, este modelo se considera **`r ifelse(metricas_peso$Rsquared > 0.8, "confiable y con alto poder predictivo", ifelse(metricas_peso$Rsquared > 0.5, "moderadamente confiable, con poder predictivo aceptable", "poco confiable, con poder predictivo limitado"))`** para estimar el peso corporal.
+
+**Modelo de IMC (Pregunta 4):** El modelo de regresión lineal múltiple para predecir el IMC, evaluado con validación cruzada repetida (5 pliegues × 5 repeticiones), alcanza un R² de `r round(mejor_imc$Rsquared, 4)` con `r mejor_imc$Variables` predictores seleccionados mediante RFE. El RMSE de `r round(mejor_imc$RMSE, 2)` kg/m² indica el error típico de predicción. La prueba de Shapiro-Wilk `r ifelse(sw_imc$p.value > 0.05, paste0("no rechaza la normalidad de los residuos (p = ", format.pval(sw_imc$p.value, digits = 3), ")."), paste0("indica desviaciones de la normalidad (p = ", format.pval(sw_imc$p.value, digits = 3), "), lo cual es esperable dado que el IMC no siempre sigue una distribución simétrica."))` Respecto a la multicolinealidad, `r sum(vif_imc > 5)` de `r length(vif_imc)` predictores muestran VIF > 5`r ifelse(sum(vif_imc > 5) > 0, ", lo cual es razonable en un modelo con muchos predictores anatómicos correlacionados entre sí; la validación cruzada ya mitiga el impacto de esto en la estimación del rendimiento", "")`. Considerando que la validación cruzada repetida proporciona una estimación estable del error de generalización, este modelo se considera **`r ifelse(mejor_imc$Rsquared > 0.8, "confiable y con alto poder predictivo", ifelse(mejor_imc$Rsquared > 0.5, "moderadamente confiable, con poder predictivo aceptable", "poco confiable, con poder predictivo limitado"))`** para predecir el IMC.
+
+**Modelo de EN (Pregunta 5):** El modelo de regresión logística múltiple para clasificar el estado nutricional, evaluado con LOOCV, presenta un AUC-ROC de `r round(mejor_en$ROC, 4)`, una sensibilidad de `r round(mejor_en$Sens, 4)` y una especificidad de `r round(mejor_en$Spec, 4)`, utilizando `r mejor_en$Variables` predictores seleccionados por RFE. `r ifelse(mejor_en$ROC > 0.9, "Un AUC superior a 0.9 indica una excelente capacidad de discriminación entre las categorías de estado nutricional.", ifelse(mejor_en$ROC > 0.8, "Un AUC entre 0.8 y 0.9 indica una buena capacidad de discriminación.", ifelse(mejor_en$ROC > 0.7, "Un AUC entre 0.7 y 0.8 indica una capacidad de discriminación aceptable.", "Un AUC inferior a 0.7 indica una capacidad de discriminación limitada.")))` Dado que la validación LOOCV es la más conservadora posible (cada observación se predice usando un modelo entrenado sin ella), las métricas reportadas representan una estimación casi insesgada del rendimiento real. En conclusión, este modelo se considera **`r ifelse(mejor_en$ROC > 0.85, "confiable y con alto poder predictivo", ifelse(mejor_en$ROC > 0.7, "moderadamente confiable, con poder predictivo aceptable", "poco confiable, con poder predictivo limitado"))`** para clasificar el estado nutricional.
+
+**Síntesis general:** Los tres modelos fueron evaluados con técnicas de remuestreo (bootstrapping, validación cruzada repetida y LOOCV) que minimizan el riesgo de sobreajuste y proporcionan estimaciones realistas del rendimiento sobre datos no vistos. Esto otorga confiabilidad a las métricas reportadas. El poder predictivo de cada modelo depende de las métricas específicas obtenidas, pero en general, las medidas anatómicas permiten estimar razonablemente las variables de composición corporal consideradas.
 
 # Referencias
 
