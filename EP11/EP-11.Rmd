@@ -286,6 +286,22 @@ sapply(datos_weight[columnas_objetivo], function(x) var(x, na.rm = TRUE))
 
 4. Cada predictor debe tener relación lineal con la respuesta
 
+```{r}
+library(car)
+
+# Construir la fórmula de manera dinámica con los predictores seleccionados
+formula_weight <- as.formula(paste("Weight ~", paste(predictores_weight, collapse = " + ")))
+
+# Ajustar el modelo de forma nativa en R
+modelo_nativo_weight <- lm(formula_weight, data = datos_weight)
+
+residualPlots(modelo_nativo_weight)
+```
+
+Las pruebas obtenidas, a partir de la función residualPlots() del paquete car sugiere que varios de los predictores utilizados por el modelo no cumplen con el supuesto de linealidad, por lo que se debe tener especial cuidado respecto a las predicciones del modelo, ya que operaciones como obtener los coeficientes del modelo de regresión podría entregar datos sesgados.
+
+5. Distribución de los residuos cercana a la normal centrada en cero
+
 ```{r fig.height=6}
 modelo_peso_final <- modelo_weight_boot$finalModel
 
@@ -295,9 +311,7 @@ sw_peso <- shapiro.test(residuals(modelo_peso_final))
 print(sw_peso)
 ```
 
-5. Distribución de los residuos cercana a la normal centrada en cero
-
-residualPlots(modelo_peso_final)
+Con un nivel de confianza del 95% es posible concluir que el modelo si cumple con el supuesto de normalidad de los residuos.
 
 6. Homocedasticidad
 
@@ -305,11 +319,15 @@ residualPlots(modelo_peso_final)
 ncvTest(modelo_peso_final)
 ```
 
+Existe evidencia estadística (95% de confianza) para afirmar que no se cumple el supuesto de homocedasticidad en este modelo para predecir el peso. Esto significa que los errores de predicción presentan variabilidad no constante (heterocedasticidad), lo que puede afectar la precisión y los errores estándar de los coeficientes estimados por mínimos cuadrados ordinarios (MCO)
+
 7. Residuos independientes entre sí
 
 ```{r}
 durbinWatsonTest(modelo_peso_final)
 ```
+
+Existe evidencia estadística suficiente para afirmar que no se cumple el supuesto de independencia de los residuos.
 
 8. Prueba de multicolinealidad mediante el factor de inflación de varianza:
 
@@ -327,12 +345,15 @@ plot(modelo_peso_final)
 par(mfrow = c(1, 1))
 ```
 
+Se concluye que el modelo presenta problemas moderados de multicolinealidad. COmo los datos representan medidas de perímetros y dimensiones corporales humanas (como el contorno de pecho, cintura y cadera), es esperable que estas variables estén fuertemente correlacionadas entre sí
+
 9. Gráfica de influencia
 
 ```{r}
 influencePlot(modelo_peso_final)
 ```
 
+Los resultados indican que hay 4 posibles casos problemáticos, siendo la observación número 41 la que podría llegar a dar mayores problemas de apalancamiento.
 
 ### Diagnósticos del modelo de IMC (Pregunta 4)
 
@@ -350,6 +371,35 @@ sapply(muestra_total[columnas_objetivo], function(x) var(x, na.rm = TRUE))
 
 4. Cada predictor debe tener relación lineal con la respuesta
 
+```{r}
+library(car)
+
+# Obtener los nombres de las variables elegidas por RFE
+predictores_imc_seleccionados <- predictors(modelo_rfe_imc)
+
+# Ver cuáles fueron en la consola
+print(predictores_imc_seleccionados)
+
+# Crear la fórmula dinámica con los predictores seleccionados por RFE
+formula_imc_nativa <- as.formula(paste("IMC ~", paste(predictores_imc_seleccionados, collapse = " + ")))
+
+# Ajustar el modelo de forma nativa en R
+modelo_nativo_imc <- lm(formula_imc_nativa, data = muestra_total)
+
+# Dividir el espacio gráfico en una cuadrícula (ej: 3 filas y 4 columnas)
+par(mfrow = c(2, 3))
+
+# Ejecutar los gráficos de residuos
+residualPlots(modelo_nativo_imc)
+
+# (Opcional) Restaurar la ventana gráfica a su estado normal de 1x1 al terminar
+par(mfrow = c(1, 1))
+```
+
+Se observa en los gráficos de residuos que gran parte de los predictores se encuentran ajustados a la recta en 0, lo que nos habla de que la linealidad podría cumplirse, excepto en algunos casos "Ankles.diameter" donde se puede ver una curva un poco más pronunciada.
+
+5. Distribución de los residuos cercana a la normal centrada en cero
+
 ```{r fig.height=6}
 # Normalidad de residuos
 cat("Prueba de Shapiro-Wilk para normalidad de residuos:\n")
@@ -357,9 +407,7 @@ sw_imc <- shapiro.test(residuals(modelo_imc_final))
 print(sw_imc)
 ```
 
-5. Distribución de los residuos cercana a la normal centrada en cero
-
-residualPlots(modelo_imc_final)
+Con un nivel de confianza del 95% es posible concluir que el modelo si cumple con el supuesto de normalidad de los residuos.
 
 6. Homocedasticidad
 
@@ -367,12 +415,15 @@ residualPlots(modelo_imc_final)
 ncvTest(modelo_imc_final)
 ```
 
+Existe evidencia estadística (95% de confianza) para afirmar que si se cumple el supuesto de homocedasticidad en este modelo para predecir el IMC.
 
 7. Residuos independientes entre sí
 
 ```{r}
 durbinWatsonTest(modelo_imc_final)
 ```
+
+Existe evidencia estadística suficiente para afirmar que si se cumple el supuesto de independencia de los residuos.
 
 8. Prueba de multicolinealidad mediante el factor de inflación de varianza
 
@@ -392,12 +443,15 @@ plot(modelo_imc_final)
 par(mfrow = c(1, 1))
 ```
 
+Se concluye que el modelo presenta problemas severos de multicolinealidad. Nuevamente informamos que como los datos representan medidas de perímetros y dimensiones corporales humanas (como el contorno de pecho, cintura y cadera), es esperable que estas variables estén fuertemente correlacionadas entre sí
+
 9. Gráfica de influencia
 
 ```{r}
-influencePlot(modelo_peso_final)
+influencePlot(modelo_imc_final)
 ```
 
+Los resultados indican que hay 5 posibles casos problemáticos, siendo la observación número 66 la que podría llegar a dar mayores problemas de apalancamiento.
 
 ### Diagnósticos del modelo de EN (Pregunta 5)
 
@@ -426,7 +480,25 @@ print(mc_en)
 
 1. Relación lineal entre predictores y la respuesta transformada
 
-residualPlots(modelo_en_final)
+```{r}
+library(car)
+
+# Extraer los nombres de las variables seleccionadas por RFE para EN
+predictores_en_seleccionados <- predictors(modelo_rfe_en)
+cat("Predictores seleccionados para EN:\n")
+print(predictores_en_seleccionados)
+
+# Construir la fórmula dinámica para regresión logística
+formula_en_nativa <- as.formula(paste("EN ~", paste(predictores_en_seleccionados, collapse = " + ")))
+
+# Ajustar el modelo de forma nativa en R (asegurando family = binomial)
+modelo_nativo_en <- glm(formula_en_nativa, data = muestra_total, family = binomial)
+
+# Ejecutar residualPlots() sobre el modelo logístico nativo
+residualPlots(modelo_nativo_en)
+```
+
+Las pruebas obtenidas, a partir de la función residualPlots() del paquete car sugieren que varios de los predictores utilizados por el modelo no cumplen con el supuesto de linealidad, por lo que se debe tener especial cuidado respecto a las predicciones del modelo, ya que podría entregar datos sesgados.
 
 2. Residuos independientes entre sí
 
@@ -434,15 +506,19 @@ residualPlots(modelo_en_final)
 durbinWatsonTest(modelo_en_final)
 ```
 
+Existe evidencia estadística suficiente (95% de confianza) para afirmar que no se cumple el supuesto de independencia de los residuos.
+
 3. Multicolinealidad entre los predictores
 
 ```{r}
 vif(modelo_en_final)
 ```
 
+El modelo de regresión logística presenta la menor multicolinealidad entre predictores comparándolo con los dos modelos anteriores. Únicamente dos de las variables pueden ser moderamente preocupantes "Forearm.Girth" y "Thigh.Girth" donde esta última supera el umbral de 5 para su factor de inflación de varianza.
+
 4. Información incompleta
 
-¿?
+No se cumple con este supuesto dado que varias de las combinaciones entre predictores y variable de respuesta no presentan la cantidad suficiente de observaciones (10 a 15).
 
 5. Separación perfecta
 
@@ -484,6 +560,8 @@ A partir de la inspección visual de los diagramas de caja generados para los pr
 influencePlot(modelo_en_final)
 ```
 
+Los resultados indican que hay 4 posibles casos problemáticos, siendo la observación número 43 la que podría llegar a dar mayores problemas de apalancamiento.
+
 # Conclusiones
 
 **Modelo de Peso (Pregunta 3):** El modelo de regresión lineal múltiple para estimar el peso, evaluado con bootstrapping (999 repeticiones), presenta un R² de `r round(metricas_peso$Rsquared, 4)`, lo que indica que explica aproximadamente el `r round(metricas_peso$Rsquared * 100, 1)`% de la variabilidad del peso corporal. El RMSE de `r round(metricas_peso$RMSE, 2)` kg representa el error promedio de predicción. Respecto a las condiciones del modelo, la prueba de Shapiro-Wilk `r ifelse(sw_peso$p.value > 0.05, paste0("no rechaza la normalidad de los residuos (p = ", format.pval(sw_peso$p.value, digits = 3), "), cumpliendo este supuesto."), paste0("sugiere desviaciones de la normalidad en los residuos (p = ", format.pval(sw_peso$p.value, digits = 3), "), lo que debe tenerse en cuenta al interpretar los intervalos de confianza."))` En cuanto a la multicolinealidad, `r ifelse(sum(vif_peso > 5) == 0, "ningún predictor supera el umbral VIF > 5, lo que indica ausencia de multicolinealidad problemática.", paste0(sum(vif_peso > 5), " predictor(es) presenta(n) VIF > 5, lo que sugiere cierto grado de multicolinealidad que podría afectar la estabilidad de los coeficientes individuales, aunque no necesariamente la capacidad predictiva global del modelo."))` En conjunto, dado que el bootstrapping provee una estimación robusta y honesta del rendimiento, este modelo se considera **`r ifelse(metricas_peso$Rsquared > 0.8, "confiable y con alto poder predictivo", ifelse(metricas_peso$Rsquared > 0.5, "moderadamente confiable, con poder predictivo aceptable", "poco confiable, con poder predictivo limitado"))`** para estimar el peso corporal.
@@ -492,7 +570,7 @@ influencePlot(modelo_en_final)
 
 **Modelo de EN (Pregunta 5):** El modelo de regresión logística múltiple para clasificar el estado nutricional, evaluado con LOOCV, presenta un AUC-ROC de `r round(mejor_en$ROC, 4)`, una sensibilidad de `r round(mejor_en$Sens, 4)` y una especificidad de `r round(mejor_en$Spec, 4)`, utilizando `r mejor_en$Variables` predictores seleccionados por RFE. `r ifelse(mejor_en$ROC > 0.9, "Un AUC superior a 0.9 indica una excelente capacidad de discriminación entre las categorías de estado nutricional.", ifelse(mejor_en$ROC > 0.8, "Un AUC entre 0.8 y 0.9 indica una buena capacidad de discriminación.", ifelse(mejor_en$ROC > 0.7, "Un AUC entre 0.7 y 0.8 indica una capacidad de discriminación aceptable.", "Un AUC inferior a 0.7 indica una capacidad de discriminación limitada.")))` Dado que la validación LOOCV es la más conservadora posible (cada observación se predice usando un modelo entrenado sin ella), las métricas reportadas representan una estimación casi insesgada del rendimiento real. En conclusión, este modelo se considera **`r ifelse(mejor_en$ROC > 0.85, "confiable y con alto poder predictivo", ifelse(mejor_en$ROC > 0.7, "moderadamente confiable, con poder predictivo aceptable", "poco confiable, con poder predictivo limitado"))`** para clasificar el estado nutricional.
 
-**Síntesis general:** Los tres modelos fueron evaluados con técnicas de remuestreo (bootstrapping, validación cruzada repetida y LOOCV) que minimizan el riesgo de sobreajuste y proporcionan estimaciones realistas del rendimiento sobre datos no vistos. Esto otorga confiabilidad a las métricas reportadas. El poder predictivo de cada modelo depende de las métricas específicas obtenidas, pero en general, las medidas anatómicas permiten estimar razonablemente las variables de composición corporal consideradas.
+**Síntesis general:** Los tres modelos fueron evaluados con técnicas de remuestreo (bootstrapping, validación cruzada repetida y LOOCV) que minimizan el riesgo de sobreajuste y proporcionan estimaciones realistas del rendimiento sobre datos no vistos. Tras los análisis de confiabilidad y poder predictivo de cada uno de los modelos, se concluye que presentan problemas respecto a varias de las condiciones planteadas en el libro guía del curso, lo que sugiere que debemos tener especial cuidado a la hora de utilizar estos modelos para intentar predecir datos. Ningún modelo está exento de violar de forma parcial algunos supuestos clásicos de la regresión. El valor de este estudio radica precisamente en haber diagnosticado rigurosamente dichas desviaciones (como la linealidad, homocedasticidad, independencia y multicolinealidad), proporcionando un panorama transparente y fundamentado para la toma de decisiones basada en datos
 
 # Referencias
 
